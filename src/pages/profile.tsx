@@ -104,7 +104,9 @@ export default function Profile() {
               id,
               field: 'name',
               value: name,
-            }).then((res) => dispatch(setAuth({ name: res.data as string })))
+            })
+              .then((res) => dispatch(setAuth({ name: res.data as string })))
+              .catch(console.log)
           }
           value={!isEmpty(name) ? name : 'Not Defined'}
           isPreviewFocusable={false}

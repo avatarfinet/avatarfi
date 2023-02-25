@@ -1,5 +1,5 @@
-import { patchUserField, PATCH_PULL_USER_TRACKED_GECKO_COINS } from '@/lib'
 import { setComp, setUser } from '@/store'
+import { usePatchUserTrackedGeckoCoinsMutation } from '@/store'
 import {
   Button,
   HStack,
@@ -10,12 +10,10 @@ import {
   useColorModeValue,
   Wrap,
 } from '@chakra-ui/react'
-import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function EditGeckoTrackedCoins() {
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false)
   const { editingTrackedGeckoCoins, selectedGeckoCoins } = useSelector(
     (state: RootState) => {
       return {
@@ -32,6 +30,9 @@ export default function EditGeckoTrackedCoins() {
     'rgb(125, 125, 125, 0.2)',
     'rgb(250, 250, 250, 0.1)'
   )
+  const [patchTrackedGeckoCoins, trackedGeckoCoinsResult] =
+    usePatchUserTrackedGeckoCoinsMutation()
+
   if (!id || !trackedGeckoCoinsLength) return <></>
   return (
     <HStack
@@ -61,22 +62,19 @@ export default function EditGeckoTrackedCoins() {
         </HStack>
         {editingTrackedGeckoCoins && selectedGeckoCoins.length && (
           <Button
-            isLoading={isLoading}
+            isLoading={trackedGeckoCoinsResult.isLoading}
             onClick={() => {
-              setIsLoading(true)
-              patchUserField({
+              patchTrackedGeckoCoins({
                 id,
-                actionType: PATCH_PULL_USER_TRACKED_GECKO_COINS,
-                field: 'trackedGeckoCoins',
-                value: selectedGeckoCoins,
-              }).then((res) => {
+                selectedGeckoCoins,
+                type: 'pull',
+              }).then((res: any) => {
                 dispatch(
                   setUser({
-                    trackedGeckoCoins: res.data.trackedGeckoCoins,
+                    trackedGeckoCoins: res.data,
                   })
                 )
                 dispatch(setComp({ selectedGeckoCoins: [] }))
-                setIsLoading(false)
               })
             }}
             colorScheme={'orange'}

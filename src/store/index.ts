@@ -56,9 +56,7 @@ const makeStore = () =>
           warnAfter: 1024,
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      })
-        .concat(geckoPersistApi.middleware)
-        .concat(geckoApi.middleware),
+      }).concat([geckoPersistApi.middleware, geckoApi.middleware]),
     devTools: true,
   })
 

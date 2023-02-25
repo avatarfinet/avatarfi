@@ -8,10 +8,10 @@ import {
   Text,
   Link,
 } from '@chakra-ui/react'
-import { useGetGeckoMarketsQuery } from '@/store'
+import { useGetGeckoMarqueMarketsQuery } from '@/store'
 
 const TickerMarque = () => {
-  const { isLoading, data } = useGetGeckoMarketsQuery({})
+  const { isLoading, data } = useGetGeckoMarqueMarketsQuery({})
   return (
     <Marquee gradient={false} speed={10} pauseOnHover>
       {!isLoading &&

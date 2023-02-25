@@ -19,10 +19,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .compare(password, doc.password)
         .then((isMatch) => {
           if (!isMatch) return res.status(403).json({ passwordIsMatch: false })
-          const expiresIn = (31556926 / 12 / 4).toFixed(0) // 1 week in seconds
+          const expiresIn = 60 * 60 * 24 * 7 // 1 week in seconds
           // Create JWT Payload
           const payload = {
-            id: doc.id,
+            id,
+            role,
           }
           // Sign token
           jwt.sign(
