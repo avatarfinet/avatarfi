@@ -7,7 +7,7 @@ export default function NotFound() {
       <Heading>404 / Page Not Found</Heading>
       <Divider />
       <Button w={250} as={Link} colorScheme="blue" href="/">
-        Home
+        Markets
       </Button>
     </Stack>
   )

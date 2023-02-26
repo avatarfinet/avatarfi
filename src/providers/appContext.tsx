@@ -1,6 +1,7 @@
 import { getUserFields } from '@/lib'
 import { setUser } from '@/store'
 import clientAuth from '@/utils/middlewares/clientAuth'
+import { useRouter } from 'next/router'
 import { createContext, useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -11,6 +12,7 @@ const AppContext = createContext({} as AppContextInterface)
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Hooks
   const dispatch = useDispatch()
+  const router = useRouter()
   // States
   const authId = useSelector((state: RootState) => state.auth.id)
 
@@ -23,6 +25,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!authId && !!clientAuth().get('avatarfi_access_token'))
       clientAuth().remove({ field: 'avatarfi_access_token', path: '/' })
+
+    if (!authId) router.push('/')
 
     if (!!authId)
       getUserFields({ id: authId, fields: ['trackedGeckoCoins'] })

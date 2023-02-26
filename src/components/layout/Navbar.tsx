@@ -36,7 +36,7 @@ export default function Navbar() {
     const navOptions = ({ size }: { size: number }) => {
       let result: any[] = [
         {
-          name: 'home',
+          name: 'markets',
           path: '/',
           icon: (
             <StockIcon

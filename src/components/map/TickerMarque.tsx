@@ -9,8 +9,9 @@ import {
   Link,
 } from '@chakra-ui/react'
 import { useGetGeckoMarqueMarketsQuery } from '@/store'
+import { memo } from 'react'
 
-const TickerMarque = () => {
+const TickerMarque = memo(function TickerMarque() {
   const { isLoading, data } = useGetGeckoMarqueMarketsQuery({})
   return (
     <Marquee gradient={false} speed={5} pauseOnHover>
@@ -60,6 +61,6 @@ const TickerMarque = () => {
         })}
     </Marquee>
   )
-}
+})
 
 export default TickerMarque

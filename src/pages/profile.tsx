@@ -21,13 +21,11 @@ import {
   useEditableControls,
 } from '@chakra-ui/react'
 import isEmpty from 'is-empty'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function Profile() {
   const dispatch = useDispatch()
-  const router = useRouter()
   const auth = useSelector((state: RootState) => state.auth)
   const { id, role } = auth
   const [state, setState] = useState({
@@ -37,12 +35,6 @@ export default function Profile() {
     phone: auth.phone,
   })
   const { email, name, surname, phone } = state
-  const isAuth = !isEmpty(auth.role)
-
-  useEffect(() => {
-    if (!isAuth) router.push('/')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuth, router])
 
   function EditableControls() {
     const {
@@ -134,7 +126,9 @@ export default function Profile() {
               id,
               field: 'surname',
               value: surname,
-            }).then((res) => dispatch(setAuth({ surname: res.data as string })))
+            })
+              .then((res) => dispatch(setAuth({ surname: res.data as string })))
+              .catch(console.log)
           }
           defaultValue={!isEmpty(surname) ? surname : 'Not Defined'}
           isPreviewFocusable={false}
@@ -162,7 +156,9 @@ export default function Profile() {
               id,
               field: 'phone',
               value: phone,
-            }).then((res) => dispatch(setAuth({ phone: res.data as string })))
+            })
+              .then((res) => dispatch(setAuth({ phone: res.data as string })))
+              .catch(console.log)
           }
           defaultValue={!isEmpty(phone) ? phone : 'Not Defined'}
           isPreviewFocusable={false}

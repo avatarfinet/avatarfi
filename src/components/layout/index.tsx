@@ -3,12 +3,16 @@ import SEO from './Seo'
 import Head from 'next/head'
 import Navbar from './Navbar'
 import Footer from './Footer'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
+import { PageSpinner } from '@/components'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter()
   const navRef = useRef<any>(null)
   const footerRef = useRef<any>(null)
   const [bodyHeight, setBodyHeight] = useState('0px')
+  const [routeLoading, seRouteLoading] = useState(false)
 
   useLayoutEffect(() => {
     setBodyHeight(
@@ -18,11 +22,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       }px`
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    window.innerHeight,
-    navRef.current?.clientHeight,
-    footerRef.current?.clientHeight,
-  ])
+  }, [window.innerHeight, router.isReady])
+
+  useEffect(() => {
+    const handleStart = () => seRouteLoading(true)
+    const handleComplete = () => seRouteLoading(false)
+
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleComplete)
+    router.events.on('routeChangeError', handleComplete)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.events])
 
   return (
     <>
@@ -33,7 +43,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         />
       </Head>
       <SEO />
-      <Box>
+      <PageSpinner display={!routeLoading ? 'none' : 'flex'} />
+      <Box display={routeLoading ? 'none' : 'initial'}>
         <div ref={navRef}>
           <Navbar />
         </div>

@@ -11,6 +11,7 @@ import {
   Wrap,
 } from '@chakra-ui/react'
 import {
+  geckoApi,
   setComp,
   setUser,
   useGetGeckoCoinsListQuery,
@@ -24,6 +25,7 @@ import Link from 'next/link'
 export default function SearchGeckoCoins() {
   const dispatch = useDispatch()
   const [optSearch, setOptSearch] = useState('0')
+  const [isActive, setIsActive] = useState(false)
   const { id } = useSelector((state: RootState) => state.auth)
   const shadowColor = useColorModeValue(
     'rgba(0, 0, 0, 0.05)',
@@ -47,7 +49,6 @@ export default function SearchGeckoCoins() {
     trackedGeckoCoinsResult.isLoading || geckoCoins.isLoading
   return (
     <Stack
-      w={'max-content'}
       justify={'center'}
       p={3}
       spacing={2}
@@ -67,7 +68,10 @@ export default function SearchGeckoCoins() {
             value={geckoSearchValue}
             onInputChange={(e) => setOptSearch(e.charAt(0).toUpperCase())}
             onMenuClose={() => setOptSearch('0')}
-            onChange={(e: any) => dispatch(setComp({ geckoSearchValue: e }))}
+            onChange={(e: any) => {
+              setIsActive(true)
+              dispatch(setComp({ geckoSearchValue: e }))
+            }}
             options={(geckoCoins.data?.[optSearch] ?? []).map((x: any) => ({
               label: `${x.symbol.toUpperCase()} / ${x.name}`,
               value: x.id,
@@ -76,7 +80,7 @@ export default function SearchGeckoCoins() {
           {geckoSearchResults.isLoading ? (
             <Spinner alignSelf={'center'} />
           ) : (
-            !!(geckoSearchResults.data || []).length && (
+            isActive && (
               <>
                 <Stack justify={'center'}>
                   <Divider />
@@ -104,6 +108,7 @@ export default function SearchGeckoCoins() {
                                 geckoSearchValue: [],
                               })
                             )
+                            setIsActive(false)
                           })
                         }}
                       >
