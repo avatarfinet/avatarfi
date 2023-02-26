@@ -6,26 +6,26 @@ import bcrypt from 'bcryptjs'
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req
   if (method !== 'POST') return res.status(405).send('req_method_not_supported')
-  const { name, surname, email, phone, password } = body
+  const { pwdResetToken, password } = body
   await connectDB()
 
-  User.findOne({ email }, 'email')
+  User.findOne({ pwdResetToken, pwdResetExpiration: { $gt: Date.now() } })
     .then((user) => {
-      if (!!user) return res.status(403).json({ emailIsRegistered: true })
+      console.log(user)
+      if (!user)
+        return res
+          .status(422)
+          .send('Session expired! Try Again with a new Request')
+
       bcrypt
         .hash(password, 12)
         .then((hash) => {
-          const newUser = new User({
-            name,
-            surname,
-            email,
-            phone,
-            password: hash,
+          user.password = hash
+          user.pwdResetToken = undefined
+          user.pwdResetExpiration = undefined
+          user.save().then(() => {
+            res.status(200).send('Password Updated successfully')
           })
-          newUser
-            .save()
-            .then((user) => res.status(200).json(user))
-            .catch(() => Error)
         })
         .catch(() => Error)
     })

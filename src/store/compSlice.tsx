@@ -11,7 +11,6 @@ function removeItem<T>(arr: Array<T>, value: T): Array<T> {
 
 const initialState = {
   geckoSearchValue: [] as { value: string; label: string }[],
-  geckoSearchResult: [] as GeckoMarketResult[],
   indicatorSortPorps: {
     sortBy: 'market_cap',
     desc: true,

@@ -11,7 +11,7 @@ export default function clientAuth() {
     path: string
     value: string
   }) => cookies.set(field, value, { path })
-  const get = (field: string) => cookies.get(field)
+  const get = (field: string): string => cookies.get(field)
   const remove = ({ field, path }: { field: string; path: string }) =>
     cookies.remove(field, { path })
   return { set, get, remove }

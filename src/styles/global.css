@@ -26,6 +26,6 @@ code {
   border: 0;
 }
 
-/* .chakra-table:last-child th  {
-  border: 0;
-} */
+.chakra-table tbody tr td  {
+  border-bottom-color: currentColor;
+}

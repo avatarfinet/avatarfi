@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
@@ -10,34 +10,41 @@ import {
   useColorModeValue,
   Wrap,
 } from '@chakra-ui/react'
-import { setComp, setUser, useGetGeckoCoinsListQuery } from '@/store'
+import {
+  setComp,
+  setUser,
+  useGetGeckoCoinsListQuery,
+  useGetGeckoSearchQuery,
+  usePatchUserTrackedGeckoCoinsMutation,
+} from '@/store'
 import { CWindowedSelect } from './ui'
 import Indicator from './mapItems/Indicator'
-import {
-  getGeckoMarketSearch,
-  patchUserField,
-  PATCH_ADD_USER_TRACKED_GECKO_COINS,
-} from '@/lib'
-import isEmpty from 'is-empty'
 import Link from 'next/link'
 
 export default function SearchGeckoCoins() {
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false)
-  const [resultIsLoading, setResultIsLoading] = useState(false)
+  const [optSearch, setOptSearch] = useState('0')
   const { id } = useSelector((state: RootState) => state.auth)
-  const { geckoSearchValue, geckoSearchResult } = useSelector(
-    (state: RootState) => state.comp
-  )
-  const geckoCoins = useGetGeckoCoinsListQuery({})
   const shadowColor = useColorModeValue(
     'rgba(0, 0, 0, 0.05)',
     'rgb(250, 250, 250, 0.05)'
   )
+  const geckoSearchValue = useSelector(
+    (state: RootState) => state.comp.geckoSearchValue
+  )
+  const geckoCoins = useGetGeckoCoinsListQuery({})
 
-  const [optSearch, setOptSearch] = useState('0')
+  const [patchTrackedGeckoCoins, trackedGeckoCoinsResult] =
+    usePatchUserTrackedGeckoCoinsMutation()
+  const geckoSearchResults = useGetGeckoSearchQuery(
+    { ids: geckoSearchValue.map((i: any) => i.value) },
+    {
+      skip: !geckoSearchValue.length,
+    }
+  )
 
-  const combinedIsLoading = isLoading || geckoCoins.isLoading
+  const combinedIsLoading =
+    trackedGeckoCoinsResult.isLoading || geckoCoins.isLoading
   return (
     <Stack
       w={'max-content'}
@@ -60,27 +67,16 @@ export default function SearchGeckoCoins() {
             value={geckoSearchValue}
             onInputChange={(e) => setOptSearch(e.charAt(0).toUpperCase())}
             onMenuClose={() => setOptSearch('0')}
-            onChange={(e: any) => {
-              dispatch(setComp({ geckoSearchValue: e }))
-              !isEmpty(e)
-                ? (setResultIsLoading(true),
-                  getGeckoMarketSearch(e.map((i: any) => i.value)).then(
-                    (res) => {
-                      dispatch(setComp({ geckoSearchResult: res.data }))
-                      setResultIsLoading(false)
-                    }
-                  ))
-                : dispatch(setComp({ geckoSearchResult: [] }))
-            }}
+            onChange={(e: any) => dispatch(setComp({ geckoSearchValue: e }))}
             options={(geckoCoins.data?.[optSearch] ?? []).map((x: any) => ({
               label: `${x.symbol.toUpperCase()} / ${x.name}`,
               value: x.id,
             }))}
           />
-          {resultIsLoading ? (
+          {geckoSearchResults.isLoading ? (
             <Spinner alignSelf={'center'} />
           ) : (
-            !isEmpty(geckoSearchResult) && (
+            !!(geckoSearchResults.data || []).length && (
               <>
                 <Stack justify={'center'}>
                   <Divider />
@@ -88,27 +84,26 @@ export default function SearchGeckoCoins() {
                     <Heading size={'xs'}>Results</Heading>
                     {!!id ? (
                       <Button
+                        isLoading={trackedGeckoCoinsResult.isLoading}
                         size={'xs'}
                         onClick={() => {
-                          setIsLoading(true)
-                          patchUserField({
+                          patchTrackedGeckoCoins({
                             id,
-                            actionType: PATCH_ADD_USER_TRACKED_GECKO_COINS,
-                            field: 'trackedGeckoCoins',
-                            value: geckoSearchValue.map((i: any) => i.value),
-                          }).then((res) => {
+                            selectedGeckoCoins: geckoSearchValue.map(
+                              (i: any) => i.value
+                            ),
+                            type: 'add',
+                          }).then((res: any) => {
                             dispatch(
                               setUser({
-                                trackedGeckoCoins: res.data.trackedGeckoCoins,
+                                trackedGeckoCoins: res.data,
                               })
                             )
                             dispatch(
                               setComp({
                                 geckoSearchValue: [],
-                                geckoSearchResult: [],
                               })
                             )
-                            setIsLoading(false)
                           })
                         }}
                       >
@@ -123,9 +118,10 @@ export default function SearchGeckoCoins() {
                   <Divider />
                 </Stack>
                 <Wrap p={1} align={'center'} justify={'center'}>
-                  {geckoSearchResult.map((item, index) => (
-                    <Indicator key={index} data={item} />
-                  ))}
+                  {geckoSearchResults.isSuccess &&
+                    geckoSearchResults.data.map((item, index) => (
+                      <Indicator key={index} data={item} />
+                    ))}
                 </Wrap>
               </>
             )

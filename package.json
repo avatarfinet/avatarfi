@@ -1,6 +1,6 @@
 {
   "name": "avatarfi",
-  "version": "0.1.0",
+  "version": "0.0.9",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -19,6 +19,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@reduxjs/toolkit": "^1.9.2",
+    "@sendgrid/mail": "^7.7.0",
     "axios": "^1.2.6",
     "bcryptjs": "^2.4.3",
     "formik": "^2.2.9",

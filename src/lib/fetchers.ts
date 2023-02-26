@@ -1,5 +1,9 @@
 import axios, { AxiosPromise } from 'axios'
 
+const transport = axios.create({
+  withCredentials: true,
+})
+
 export function postSignup(userData: {
   email: string
   name?: string
@@ -25,6 +29,28 @@ export function postLogin(userData: {
   return axios.post(`/api/users/login`, userData)
 }
 
+export function postResetPwd({
+  email,
+  origin,
+  userAgent,
+}: {
+  email: string
+  origin: string
+  userAgent: string
+}) {
+  return axios.post('/api/users/reset-pwd', { email, origin, userAgent })
+}
+
+export function postNewPwd({
+  pwdResetToken,
+  password,
+}: {
+  pwdResetToken: any
+  password: string
+}) {
+  return axios.post('/api/users/new-pwd', { pwdResetToken, password })
+}
+
 export function putUserField({
   actionType,
   id,
@@ -36,23 +62,7 @@ export function putUserField({
   field: string
   value: string
 }) {
-  return axios.put(`/api/users?id=${id}&action=${actionType}`, {
-    [field]: value,
-  })
-}
-
-export function patchUserField({
-  actionType,
-  id,
-  field,
-  value,
-}: {
-  actionType: string
-  id: string
-  field: string
-  value: any
-}) {
-  return axios.patch(`/api/users?id=${id}&action=${actionType}`, {
+  return transport.put(`/api/users?id=${id}&action=${actionType}`, {
     [field]: value,
   })
 }
@@ -65,15 +75,4 @@ export function getUserFields({
   fields: string[]
 }) {
   return axios.get(`/api/users?id=${id}&fields=${fields.join('%20')}`)
-}
-
-export function postResetPwd(email: string) {
-  return axios.post('/api/users/reset-pwd', email)
-}
-
-export function getGeckoMarketSearch(queryParams: string[]) {
-  const assets = queryParams.join('%2C')
-  return axios.get(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${assets}&order=market_cap_desc`
-  )
 }

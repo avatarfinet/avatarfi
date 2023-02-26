@@ -9,10 +9,12 @@ import {
   FormLabel,
   Input,
   InputGroup,
+  Link as ChakraLink,
   Stack,
 } from '@chakra-ui/react'
 import * as Yup from 'yup'
 import { handleLogin } from '@/lib'
+import Link from 'next/link'
 
 const Login = () => {
   const router = useRouter()
@@ -46,7 +48,7 @@ const Login = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Stack spacing={3}>
+      <Stack spacing={3} align="center">
         <FormControl isInvalid={formik.touched.email && !!formik.errors.email}>
           <FormLabel htmlFor="email">E-mail</FormLabel>
           <InputGroup>
@@ -75,7 +77,11 @@ const Login = () => {
           </InputGroup>
           <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
         </FormControl>
+        <ChakraLink as={Link} href="/forgot-pwd" color={'blue.300'}>
+          Forgot Password?
+        </ChakraLink>
         <Button
+          w={250}
           colorScheme="twitter"
           size="sm"
           type="submit"

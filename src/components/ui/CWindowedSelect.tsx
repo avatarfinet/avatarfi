@@ -29,11 +29,11 @@ export default function CWindowedSelect({
     menuList: (provided: any) => {
       return {
         ...provided,
-        '& :first-child': {
+        '& :first-of-type': {
           borderTopLeftRadius: '1rem',
           borderTopRightRadius: '1rem',
         },
-        '& :last-child': {
+        '& :last-of-type': {
           borderBottomLeftRadius: '1rem',
           borderBottomRightRadius: '1rem',
         },
