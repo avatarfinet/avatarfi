@@ -75,6 +75,11 @@ export default function EditGeckoTrackedCoins() {
                   })
                 )
                 dispatch(setComp({ selectedGeckoCoins: [] }))
+                dispatch(
+                  setComp({
+                    editingTrackedGeckoCoins: !editingTrackedGeckoCoins,
+                  })
+                )
               })
             }}
             colorScheme={'orange'}

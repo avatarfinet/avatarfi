@@ -1,9 +1,9 @@
 import { useGetGeckoMarketsQuery } from '@/store'
 import { Spinner, Wrap } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import Indicator from '../mapItems/Indicator'
+import Market from '../mapItems/Market'
 
-export default function Indicators() {
+export default function Markets() {
   const dispatch = useDispatch()
   const { sortBy, desc, perPage, page } = useSelector(
     (state: RootState) => state.comp.indicatorSortPorps
@@ -35,7 +35,7 @@ export default function Indicators() {
             desc ? b?.[sortBy] - a?.[sortBy] : a?.[sortBy] - b?.[sortBy]
           )
           .map((i, index) => (
-            <Indicator
+            <Market
               selected={selectedGeckoCoins.includes(i.id)}
               dispatch={dispatch}
               key={index}

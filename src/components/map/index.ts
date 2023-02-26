@@ -1,2 +1,2 @@
-export { default as Indicators } from './Indicators'
+export { default as Markets } from './Markets'
 export { default as TickerMarque } from './TickerMarque'

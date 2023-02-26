@@ -1,7 +1,7 @@
 import {
   SearchGeckoCoins,
   SortGeckoCoins,
-  Indicators,
+  Markets,
   EditGeckoTrackedCoins,
 } from '@/components'
 import { HStack, Stack, Wrap } from '@chakra-ui/react'
@@ -14,7 +14,7 @@ export default function Info() {
         <SearchGeckoCoins />
       </HStack>
       <SortGeckoCoins />
-      <Indicators />
+      <Markets />
     </Stack>
   )
 }

@@ -19,7 +19,7 @@ import {
   usePatchUserTrackedGeckoCoinsMutation,
 } from '@/store'
 import { CWindowedSelect } from './ui'
-import Indicator from './mapItems/Indicator'
+import Indicator from './mapItems/Market'
 import Link from 'next/link'
 
 export default function SearchGeckoCoins() {

@@ -5,7 +5,7 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import { PageSpinner } from '@/components'
+import PageSpinner from './PageSpinner'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
@@ -43,8 +43,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         />
       </Head>
       <SEO />
-      <PageSpinner display={!routeLoading ? 'none' : 'flex'} />
-      <Box display={routeLoading ? 'none' : 'initial'}>
+      <PageSpinner routeLoading={routeLoading} />
+      <Box>
         <div ref={navRef}>
           <Navbar />
         </div>

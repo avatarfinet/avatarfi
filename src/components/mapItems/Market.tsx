@@ -16,7 +16,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 
-export default function Indicator({
+export default function Market({
   data,
   editing,
   selected,
@@ -91,13 +91,15 @@ export default function Indicator({
               borderBottomColor={'current'}
             >
               <Stack spacing={0} align={'center'}>
-                <HStack
-                  onClick={() =>
-                    window.confirm('Open CoinGecko ' + ticker + ' Link?') &&
-                    window.open('https://www.coingecko.com/en/coins/' + id)
-                  }
-                >
-                  <Text as={Link} color={'twitter.500'}>
+                <HStack>
+                  <Text
+                    cursor={'grab'}
+                    onClick={() =>
+                      window.confirm('Open CoinGecko ' + ticker + ' Link?') &&
+                      window.open('https://www.coingecko.com/en/coins/' + id)
+                    }
+                    color={'twitter.500'}
+                  >
                     {ticker}
                   </Text>
                   <Image
