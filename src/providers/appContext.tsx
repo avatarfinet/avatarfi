@@ -25,12 +25,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       clientAuth().remove({ field: 'avatarfi_access_token', path: '/' })
 
     if (!!authId)
-      getUserFields({ id: authId, fields: ['trackedGeckoCoins'] }).then(
-        (res: any) =>
+      getUserFields({ id: authId, fields: ['trackedGeckoCoins'] })
+        .then((res: any) =>
           dispatch(
             setUser({ trackedGeckoCoins: res.data?.trackedGeckoCoins ?? [] })
           )
-      )
+        )
+        .catch((err) => console.log(err))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authId])
 

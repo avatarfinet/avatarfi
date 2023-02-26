@@ -28,7 +28,6 @@ export default function Navbar() {
   const itemBgColor = useColorModeValue('gray.100', 'whiteAlpha.200')
   const initalColor = colorMode === 'dark' ? 'white' : 'black'
   const auth = useSelector((state: RootState) => state.auth)
-  const gecko = useSelector((state: RootState) => state.gecko)
 
   const isLoggedIn = !!auth.id
   const isAdmin = auth.role === 'admin'
@@ -78,22 +77,21 @@ export default function Navbar() {
     }
 
     return navOptions({ size: 6 }).map((x, index) => (
-      <Flex
-        flexDirection={'column'}
-        align="center"
-        as={Link}
-        key={index}
-        href={x.path}
-        color={clientLoc === x.path ? 'blue.300' : initalColor}
-        fontWeight={550}
-        /* bg={`rgba(255, 255, 255, ${clientLoc === x.path ? '0.3' : '0.08'})`} */
-        bg={itemBgColor}
-        p={1.5}
-        borderRadius="1rem"
-      >
-        {x.icon}
-        {!!x.name && <Text fontSize="xs">{x.name}</Text>}
-      </Flex>
+      <Link key={index} href={x.path}>
+        <Flex
+          flexDirection={'column'}
+          align="center"
+          color={clientLoc === x.path ? 'blue.300' : initalColor}
+          fontWeight={550}
+          /* bg={`rgba(255, 255, 255, ${clientLoc === x.path ? '0.3' : '0.08'})`} */
+          bg={itemBgColor}
+          p={1.5}
+          borderRadius="1rem"
+        >
+          {x.icon}
+          {!!x.name && <Text fontSize="xs">{x.name}</Text>}
+        </Flex>
+      </Link>
     ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientLoc, isAdmin, isLoggedIn, colorMode])

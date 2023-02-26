@@ -1,5 +1,3 @@
-import TvWidgets from '../components/map/TvWidgets'
-
 import {
   SearchGeckoCoins,
   SortGeckoCoins,

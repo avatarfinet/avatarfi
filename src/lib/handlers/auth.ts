@@ -1,9 +1,8 @@
-import bcrypt from 'bcryptjs'
 import isEmpty from 'is-empty'
 import { setAuth } from '@/store'
-import { clientAuth } from '@/utils'
 import { NextRouter } from 'next/router'
 import { postLogin, postResetPwd, postSignup } from '@/lib'
+import { clientAuth } from '@/utils'
 
 // SIGNUP
 export function handleSignup({

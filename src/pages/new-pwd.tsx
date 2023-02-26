@@ -32,7 +32,7 @@ export default function Signup() {
           (val) => !!val && val.length > 5
         ),
       confirmPassword: Yup.string().oneOf(
-        [Yup.ref('password'), null],
+        [Yup.ref('password'), undefined],
         'Passwords must match!'
       ),
     }),

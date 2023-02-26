@@ -16,13 +16,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const sendStatus500 = () => res.status(500).send('Something went wrong.')
   const sendStatus405ActionNotSuppoerted = () =>
     res.status(405).send('req_query_actionType_not_supported')
-  const auth = await serverAuth(req, res)
 
   await connectDB()
 
   switch (method) {
     case 'PUT':
-      if (auth.isError) break
+      if ((await serverAuth(req, res)).isError) break
       switch (action) {
         case PUT_USER_NAME:
           User.findOneAndUpdate(
@@ -57,7 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       break
     case 'PATCH':
-      if (auth.isError) break
+      if ((await serverAuth(req, res)).isError) break
       switch (action) {
         case PATCH_ADD_USER_TRACKED_GECKO_COINS:
           User.findOneAndUpdate(

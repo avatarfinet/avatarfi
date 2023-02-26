@@ -29,3 +29,7 @@ code {
 .chakra-table tbody tr td  {
   border-bottom-color: currentColor;
 }
+
+.chakra-table__container {
+  overflow: hidden !important;
+}
