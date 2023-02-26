@@ -1,4 +1,4 @@
-import { User } from '@/models'
+import { User } from '@/lib/models'
 import { connectDB } from '@/utils'
 import { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'

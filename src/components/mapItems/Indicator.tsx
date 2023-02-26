@@ -83,7 +83,13 @@ export default function Indicator({
       <Table size="xs">
         <Thead>
           <Tr>
-            <Th fontSize={10} textAlign="center">
+            <Th
+              fontSize={10}
+              color={'current'}
+              textAlign="center"
+              borderBottomWidth={2}
+              borderBottomColor={'current'}
+            >
               <Stack spacing={0} align={'center'}>
                 <HStack
                   onClick={() =>
@@ -108,7 +114,7 @@ export default function Indicator({
             </Th>
           </Tr>
         </Thead>
-        <Tbody fontSize={'1px'}>
+        <Tbody fontSize={10} fontWeight={'bold'}>
           {!!market_cap && (
             <Tr>
               <Td textAlign="center">

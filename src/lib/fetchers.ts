@@ -1,4 +1,3 @@
-import clientAuth from '@/utils/middlewares/clientAuth'
 import axios, { AxiosPromise } from 'axios'
 
 const transport = axios.create({
@@ -30,6 +29,28 @@ export function postLogin(userData: {
   return axios.post(`/api/users/login`, userData)
 }
 
+export function postResetPwd({
+  email,
+  origin,
+  userAgent,
+}: {
+  email: string
+  origin: string
+  userAgent: string
+}) {
+  return axios.post('/api/users/reset-pwd', { email, origin, userAgent })
+}
+
+export function postNewPwd({
+  pwdResetToken,
+  password,
+}: {
+  pwdResetToken: any
+  password: string
+}) {
+  return axios.post('/api/users/new-pwd', { pwdResetToken, password })
+}
+
 export function putUserField({
   actionType,
   id,
@@ -41,7 +62,6 @@ export function putUserField({
   field: string
   value: string
 }) {
-  console.log(clientAuth().get('avatarfi_access_token'))
   return transport.put(`/api/users?id=${id}&action=${actionType}`, {
     [field]: value,
   })
@@ -55,8 +75,4 @@ export function getUserFields({
   fields: string[]
 }) {
   return axios.get(`/api/users?id=${id}&fields=${fields.join('%20')}`)
-}
-
-export function postResetPwd(email: string) {
-  return axios.post('/api/users/reset-pwd', email)
 }

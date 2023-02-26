@@ -10,8 +10,8 @@ const UserSchema = new Schema({
   name: { type: String },
   surname: { type: String },
   phone: { type: String },
-  resetToken: { type: String },
-  expirationToken: { type: Date },
+  pwdResetToken: { type: String },
+  pwdResetExpiration: { type: Number },
   // UTIL DATA
   trackedGeckoCoins: { type: [String] },
   // DATE

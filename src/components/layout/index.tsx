@@ -37,7 +37,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div ref={navRef}>
           <Navbar />
         </div>
-        <Stack align={'center'} overflow="scroll" p={3} minH={bodyHeight}>
+        <Stack
+          align={'center'}
+          justify={'center'}
+          overflow="scroll"
+          p={3}
+          minH={bodyHeight}
+        >
           {children}
         </Stack>
         <div ref={footerRef}>

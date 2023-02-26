@@ -1,108 +1,108 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import axios from 'axios'
+import { useState } from 'react'
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Input,
+  InputGroup,
+  Stack,
+} from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { postNewPwd } from '@/lib'
 
-import { Input, InputGroup, InputPrep } from '../../components/ui/Inputs'
-import { AlertCard } from '../../components/ui/Cards'
-import { TextBtn } from '../../components/ui/Buttons'
-
-const NewPass = () => {
-  const history = useHistory()
-  const { token } = useParams()
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-
-  const [errorMsg, setErrorMsg] = useState(false)
-  const [successMsg, setSuccessMsg] = useState(false)
-
-  const timerRef = useRef()
-
-  useEffect(
-    () => () => {
-      clearTimeout(timerRef.current)
+export default function Signup() {
+  const router = useRouter()
+  const { pwdResetToken } = router.query
+  const [helperText, setHelperText] = useState('')
+  const formik = useFormik({
+    initialValues: {
+      password: '',
+      confirmPassword: '',
     },
-    []
-  )
+    validationSchema: Yup.object({
+      password: Yup.string()
+        .required('Password is required!')
+        .test(
+          'len',
+          'Must be more then 5 characters',
+          (val) => !!val && val.length > 5
+        ),
+      confirmPassword: Yup.string().oneOf(
+        [Yup.ref('password'), null],
+        'Passwords must match!'
+      ),
+    }),
+    onSubmit: (values, actions) => {
+      const { setSubmitting, setFieldError } = actions
+      postNewPwd({ pwdResetToken, password: values.password })
+        .then((res) => {
+          setHelperText(res.data)
+          router.push('/login')
+          setSubmitting(false)
+        })
+        .catch((err) => {
+          setFieldError('password', err.response.data)
+          setSubmitting(false)
+        })
+    },
+  })
 
-  const PostData = () => {
-    axios
-      .post('/api/users/new-pwd', { password, token })
-      .then((res) => {
-        const data = res.data
-        if (data.error) {
-          setSuccessMsg(false)
-          setErrorMsg(true)
-        } else {
-          setErrorMsg(false)
-          setSuccessMsg(true)
-          // set a time before we redirect the user to login page
-          timerRef.current = setTimeout(() => {
-            history.push('/login')
-          }, 3000)
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
   return (
-    <div className="dfc jc-c ai-c p-3 mxw-30r ma">
-      <div className="p-3">
-        {password !== '' && confirmPassword !== '' ? (
-          password !== confirmPassword ? (
-            <AlertCard variant="warning">
-              Confirm password doesnt match the password — check it out !
-            </AlertCard>
-          ) : null
-        ) : null}
-        {/* Handle Error Notification if there is any */}
-        {errorMsg ? (
-          <AlertCard variant="danger">
-            Session expired ! Try Again with a new Request — check it Again !
-          </AlertCard>
-        ) : null}
-        {/* Handle Success Notification */}
-        {successMsg ? (
-          <AlertCard variant="success">
-            Password Updated successfully — check it out !
-          </AlertCard>
-        ) : null}
-        <h4 className="mb-5 mt-3">
-          <b>Submit Reset</b> below
-        </h4>
-      </div>
-      <form className="dfc jc-c ai-c" noValidate>
-        <InputGroup className="mb-3">
-          <InputPrep variant="pillL">Password</InputPrep>
-          <Input
-            variant="pillR"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </InputGroup>
-        <InputGroup className="mb-5">
-          <InputPrep variant="pillL">Confirm Password</InputPrep>
-          <Input
-            variant="pillR"
-            name="Confirm password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </InputGroup>
-        <TextBtn
-          variant="info"
-          size="sm"
-          disabled={password !== '' && confirmPassword !== '' ? false : true}
-          onClick={() => PostData()}
-        >
-          Submit The New Password
-        </TextBtn>
+    <>
+      <form onSubmit={formik.handleSubmit}>
+        <Stack spacing={3}>
+          <FormControl
+            isInvalid={formik.touched.password && !!formik.errors.password}
+          >
+            <FormLabel htmlFor="password">New Password*</FormLabel>
+            <InputGroup>
+              <Input
+                name="password"
+                type="password"
+                placeholder="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+              />
+            </InputGroup>
+            <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+          </FormControl>
+          <FormControl
+            isInvalid={
+              formik.touched.confirmPassword && !!formik.errors.confirmPassword
+            }
+          >
+            <FormLabel htmlFor="password">Confirm Password*</FormLabel>
+            <InputGroup>
+              <Input
+                name="confirmPassword"
+                type="password"
+                placeholder="confirm password"
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+              />
+            </InputGroup>
+            <FormErrorMessage>{formik.errors.confirmPassword}</FormErrorMessage>
+            <FormHelperText
+              display={!helperText ? 'none' : 'initial'}
+              color={'green.300'}
+            >
+              {helperText}
+            </FormHelperText>
+          </FormControl>
+          <Button
+            colorScheme="twitter"
+            size="sm"
+            type="submit"
+            isLoading={formik.isSubmitting}
+          >
+            Submit
+          </Button>
+        </Stack>
       </form>
-    </div>
+    </>
   )
 }
-
-export default NewPass

@@ -1,13 +1,14 @@
-import { Button, Center, Text } from '@chakra-ui/react'
+import { Button, Divider, Heading, Stack } from '@chakra-ui/react'
 import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <Center gap={3} flex="1">
-      <Button as={Link} colorScheme="blue" href="/" variant="outline" size="md">
-        Go Home
+    <Stack gap={5} align={'center'}>
+      <Heading>404 / Page Not Found</Heading>
+      <Divider />
+      <Button w={250} as={Link} colorScheme="blue" href="/">
+        Home
       </Button>
-      <Text fontSize="2xl">404 - Not Found!</Text>
-    </Center>
+    </Stack>
   )
 }

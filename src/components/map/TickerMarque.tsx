@@ -13,7 +13,7 @@ import { useGetGeckoMarqueMarketsQuery } from '@/store'
 const TickerMarque = () => {
   const { isLoading, data } = useGetGeckoMarqueMarketsQuery({})
   return (
-    <Marquee gradient={false} speed={10} pauseOnHover>
+    <Marquee gradient={false} speed={5} pauseOnHover>
       {!isLoading &&
         (data ?? []).map((i, index) => {
           const ticker = i.symbol.toUpperCase()

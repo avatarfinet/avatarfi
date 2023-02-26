@@ -24,7 +24,7 @@ export default function Indicators() {
   })
 
   return (
-    <Wrap spacing={3} align={'center'} justify={'center'} p={1}>
+    <Wrap spacing={3} align={'center'} justify={'center'} p={3}>
       {geckoMarkets.isLoading ? (
         <Spinner />
       ) : (

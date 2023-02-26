@@ -1,64 +1,59 @@
-import { useRouter } from 'next/router'
 import {
   Button,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Input,
-  InputGroup,
-  InputLeftAddon,
   Stack,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { postResetPwd } from '@/lib'
+import { handleForgotPwd } from '@/lib'
+import { useState } from 'react'
 
 const ForgotPassword = () => {
-  const router = useRouter()
-
+  const [helperText, setHelperText] = useState('')
   const formik = useFormik({
     initialValues: { email: '' },
     validationSchema: Yup.object({
       email: Yup.string()
         .required('Email is required!')
-        .email(`Must be a valid email`)
-        .test(
-          'checkEmailRegistered',
-          'This email is not registered!',
-          (value) =>
-            fetch(`is-email-registerd/${value}`).then(async (res) => {
-              const { isEmailUnique } = await res.json()
-              return isEmailUnique
-            })
-        ),
+        .email(`Must be a valid email`),
     }),
-    onSubmit: (values, _) => {
-      postResetPwd(values.email)
-        .then(() => {
-          router.push('/login')
-        })
-        .catch((err) => console.log(err))
+    onSubmit: (values, actions) => {
+      const { setFieldError, setSubmitting } = actions
+      handleForgotPwd({
+        email: values.email,
+        setFieldError,
+        setSubmitting,
+        setHelperText,
+      })
     },
   })
 
   return (
-    <Stack spacing={3}>
-      <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit}>
+      <Stack spacing={3} align={'center'}>
         <FormControl isInvalid={formik.touched.email && !!formik.errors.email}>
           <FormLabel htmlFor="email">E-mail</FormLabel>
-          <InputGroup>
-            <InputLeftAddon>Email</InputLeftAddon>
-            <Input
-              name="email"
-              type="email"
-              placeholder="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-            />
-          </InputGroup>
+          <Input
+            name="email"
+            type="email"
+            placeholder="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+          />
           <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+          <FormHelperText
+            display={!helperText ? 'none' : 'initial'}
+            color={'green.300'}
+          >
+            {helperText}
+          </FormHelperText>
         </FormControl>
         <Button
+          w={250}
           colorScheme="twitter"
           size="sm"
           type="submit"
@@ -66,8 +61,8 @@ const ForgotPassword = () => {
         >
           Reset Password
         </Button>
-      </form>
-    </Stack>
+      </Stack>
+    </form>
   )
 }
 

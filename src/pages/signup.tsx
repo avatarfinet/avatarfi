@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
   FormControl,
@@ -7,17 +7,17 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  Stack,
+  Wrap,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { phoneRegExp } from '@/utils'
-import { postSignup } from '@/lib'
+import { handleSignup } from '@/lib'
 
 export default function Signup() {
-  const router = useRouter()
   const dispatch = useDispatch()
+  const router = useRouter()
   const auth = useSelector((state: RootState) => state.auth)
   const formik = useFormik({
     initialValues: {
@@ -46,17 +46,8 @@ export default function Signup() {
       ),
     }),
     onSubmit: (values, actions) => {
-      const { email, name, surname, phone, password } = values
-      postSignup({ email, name, surname, phone, password })
-        .then((res) => {
-          actions.setSubmitting(false)
-          router.push('/login')
-        })
-        .catch((err) => {
-          if (err?.response?.data?.emailIsRegistered)
-            actions.setFieldError('email', 'This email is registered!')
-          actions.setSubmitting(false)
-        })
+      const { setSubmitting, setFieldError } = actions
+      handleSignup({ values, setFieldError, setSubmitting, dispatch, router })
     },
   })
 
@@ -69,13 +60,12 @@ export default function Signup() {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={2}>
+        <Wrap justify={'center'} maxW={600} spacing={3}>
           <FormControl
+            maxW={250}
             isInvalid={formik.touched.email && !!formik.errors.email}
           >
-            <FormLabel fontSize={'xs'} htmlFor="email">
-              E-mail*
-            </FormLabel>
+            <FormLabel htmlFor="email">E-mail*</FormLabel>
             <InputGroup>
               <Input
                 name="email"
@@ -87,57 +77,11 @@ export default function Signup() {
             </InputGroup>
             <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
           </FormControl>
-          <FormControl>
-            <FormLabel fontSize={'xs'} htmlFor="name">
-              Name ( optional )
-            </FormLabel>
-            <InputGroup>
-              <Input
-                name="name"
-                type="text"
-                placeholder="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-              />
-            </InputGroup>
-          </FormControl>
-          <FormControl>
-            <FormLabel fontSize={'xs'} htmlFor="name">
-              Surname ( optional )
-            </FormLabel>
-            <InputGroup>
-              <Input
-                name="surname"
-                type="text"
-                placeholder="surname"
-                value={formik.values.surname}
-                onChange={formik.handleChange}
-              />
-            </InputGroup>
-          </FormControl>
           <FormControl
-            isInvalid={formik.touched.phone && !!formik.errors.phone}
-          >
-            <FormLabel fontSize={'xs'} htmlFor="name">
-              Phone Number ( optional )
-            </FormLabel>
-            <InputGroup>
-              <Input
-                name="phone"
-                type="tel"
-                placeholder="phone number"
-                value={formik.values.phone}
-                onChange={formik.handleChange}
-              />
-            </InputGroup>
-            <FormErrorMessage>{formik.errors.phone}</FormErrorMessage>
-          </FormControl>
-          <FormControl
+            maxW={250}
             isInvalid={formik.touched.password && !!formik.errors.password}
           >
-            <FormLabel fontSize={'xs'} htmlFor="password">
-              Password*
-            </FormLabel>
+            <FormLabel htmlFor="password">Password*</FormLabel>
             <InputGroup>
               <Input
                 name="password"
@@ -150,13 +94,12 @@ export default function Signup() {
             <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
           </FormControl>
           <FormControl
+            maxW={250}
             isInvalid={
               formik.touched.confirmPassword && !!formik.errors.confirmPassword
             }
           >
-            <FormLabel fontSize={'xs'} htmlFor="password">
-              Confirm Password*
-            </FormLabel>
+            <FormLabel htmlFor="password">Confirm Password*</FormLabel>
             <InputGroup>
               <Input
                 name="confirmPassword"
@@ -168,7 +111,48 @@ export default function Signup() {
             </InputGroup>
             <FormErrorMessage>{formik.errors.confirmPassword}</FormErrorMessage>
           </FormControl>
+          <FormControl maxW={250}>
+            <FormLabel htmlFor="name">Name ( optional )</FormLabel>
+            <InputGroup>
+              <Input
+                name="name"
+                type="text"
+                placeholder="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+              />
+            </InputGroup>
+          </FormControl>
+          <FormControl maxW={250}>
+            <FormLabel htmlFor="name">Surname ( optional )</FormLabel>
+            <InputGroup>
+              <Input
+                name="surname"
+                type="text"
+                placeholder="surname"
+                value={formik.values.surname}
+                onChange={formik.handleChange}
+              />
+            </InputGroup>
+          </FormControl>
+          <FormControl
+            maxW={250}
+            isInvalid={formik.touched.phone && !!formik.errors.phone}
+          >
+            <FormLabel htmlFor="name">Phone Number ( optional )</FormLabel>
+            <InputGroup>
+              <Input
+                name="phone"
+                type="tel"
+                placeholder="phone number"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+              />
+            </InputGroup>
+            <FormErrorMessage>{formik.errors.phone}</FormErrorMessage>
+          </FormControl>
           <Button
+            w={250}
             colorScheme="twitter"
             size="sm"
             type="submit"
@@ -176,7 +160,7 @@ export default function Signup() {
           >
             Signup
           </Button>
-        </Stack>
+        </Wrap>
       </form>
     </>
   )
