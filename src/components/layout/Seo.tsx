@@ -1,31 +1,49 @@
 import Head from 'next/head'
 
-const { description, title, siteTitle /* twitter */ } = {
+const { description, title, siteName, keywords } = {
   title: 'App',
-  siteTitle: 'Avatarfi',
+  siteName: 'Avatarfi',
   description: 'Web3 | Monitor | Crypto | Analytics | Sort',
-  /* twitter: 'https://mobile.twitter.com/uniposorg', */
+  keywords: 'Web3, Crypto, Trade, Monitor, Bridge, Aggregate',
 }
+
+const metas = [
+  { name: 'type', content: 'website' },
+  { name: 'title', content: `${title}` },
+  { name: 'site_name', content: `${siteName}` },
+  { name: 'image', content: '/avatarfi-logo.svg' },
+  { name: 'description', content: `${description}` },
+  { name: 'keywords', content: `${keywords}` },
+]
 
 export default function SEO() {
   return (
     <Head>
-      <title>{`${title} | ${siteTitle}`}</title>
-      <meta property="type" content="website" />
-      <meta property="site_name" content={siteTitle} />
-      <meta property="title" content={title} />
-      <meta property="image" content={'/avatarfi-logo.svg'} />
-      <meta property="description" content={description} />
+      <link rel="manifest" href="/manifest.json" />
+      <title>{`${title} | ${siteName}`}</title>
+      {/* NORMAL */}
+      {metas.map((i, index) => (
+        <meta key={index} name={i.name} content={i.content} />
+      ))}
       {/* OG */}
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content={siteTitle} />
-      <meta property="og:title" content={title} />
-      <meta property="og:image" content={'/avatarfi-logo.svg'} />
-      <meta property="og:description" content={description} />
-      {/* <meta property="twitter:card" content="summary" />
-      <meta property="twitter:creator" content={twitter} />
-      <meta property="twitter:title" content={title} />
-      <meta property="twitter:description" content={description} /> */}
+      {metas.map((i, index) => (
+        <meta key={index} name={`'og:${i.name}`} content={i.content} />
+      ))}
+      {/* ICONS */}
+      <link
+        href="/icons/favicon-16x16.png"
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+      />
+      <link
+        href="/icons/favicon-32x32.png"
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+      />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png"></link>
+      <meta name="theme-color" content="#000000" />
     </Head>
   )
 }
