@@ -6,7 +6,10 @@ export default function PageSpinner({
 }: {
   routeLoading: boolean
 }) {
-  const bgColor = useColorModeValue(themeColors.bg.light, themeColors.bg.dark)
+  const bgColor = useColorModeValue(
+    'rgba(253, 253, 255, 0.9)',
+    'rgba(26, 32, 44, 0.9)'
+  )
   return (
     <Slide
       in={routeLoading}
@@ -22,7 +25,7 @@ export default function PageSpinner({
         backgroundColor: bgColor,
       }}
     >
-      <Image h={300} src={'/avatarfi-spinner.gif'} alt={'avatarfi-spinner'} />
+      <Image h={250} src={'/avatarfi-spinner.gif'} alt={'avatarfi-spinner'} />
     </Slide>
   )
 }

@@ -14,6 +14,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { phoneRegExp } from '@/utils'
 import { handleSignup } from '@/lib'
+import { AvatarSpinner } from '@/components'
 
 export default function Signup() {
   const dispatch = useDispatch()
@@ -156,6 +157,7 @@ export default function Signup() {
             colorScheme="twitter"
             size="sm"
             type="submit"
+            spinner={<AvatarSpinner />}
             isLoading={formik.isSubmitting}
           >
             Signup

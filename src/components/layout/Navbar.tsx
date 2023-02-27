@@ -8,6 +8,8 @@ import {
   Heading,
   HStack,
   Image,
+  Slide,
+  SlideFade,
   Stack,
   Text,
   useColorMode,
@@ -104,7 +106,7 @@ export default function Navbar() {
     >
       <HStack spacing={5} p={2} justify={'center'}>
         <Link href={'/'}>
-          <Image w={50} src={'avatarfi-logo.svg'} alt="Avatarfi Logo" />
+          <Image src={'avatarfi-logo.svg'} w={50} alt="Avatarfi Logo" />
         </Link>
         <Button size={'sm'} onClick={toggleColorMode}>
           {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}

@@ -15,6 +15,7 @@ import {
 import * as Yup from 'yup'
 import { handleLogin } from '@/lib'
 import Link from 'next/link'
+import { AvatarSpinner } from '@/components'
 
 const Login = () => {
   const router = useRouter()
@@ -85,6 +86,7 @@ const Login = () => {
           colorScheme="twitter"
           size="sm"
           type="submit"
+          spinner={<AvatarSpinner />}
           isLoading={formik.isSubmitting}
         >
           Login

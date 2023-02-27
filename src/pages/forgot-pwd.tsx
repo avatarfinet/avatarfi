@@ -11,6 +11,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { handleForgotPwd } from '@/lib'
 import { useState } from 'react'
+import { AvatarSpinner } from '@/components'
 
 const ForgotPassword = () => {
   const [helperText, setHelperText] = useState('')
@@ -57,6 +58,7 @@ const ForgotPassword = () => {
           colorScheme="twitter"
           size="sm"
           type="submit"
+          spinner={<AvatarSpinner />}
           isLoading={formik.isSubmitting}
         >
           Reset Password

@@ -72,6 +72,7 @@ export default function Profile() {
   return (
     <>
       <Button
+        ml={'5vw'}
         mr={'auto'}
         colorScheme={'orange'}
         size={'xs'}

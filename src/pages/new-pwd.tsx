@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { postNewPwd } from '@/lib'
+import { AvatarSpinner } from '@/components'
 
 export default function Signup() {
   const router = useRouter()
@@ -97,6 +98,7 @@ export default function Signup() {
             colorScheme="twitter"
             size="sm"
             type="submit"
+            spinner={<AvatarSpinner />}
             isLoading={formik.isSubmitting}
           >
             Submit

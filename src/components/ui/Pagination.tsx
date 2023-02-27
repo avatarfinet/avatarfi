@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
+  Box,
   Button,
   HStack,
   Menu,
@@ -32,16 +33,18 @@ export default function Pagination({
   const pageRange = range(1, Math.round(total / perPage) || 1)
   return (
     <HStack spacing={2}>
-      <Menu>
-        <MenuButton size={'sm'} as={Button} rightIcon={<ChevronDownIcon />}>
-          {perPage}
-        </MenuButton>
-        <MenuList minW={'max-content'}>
-          <MenuItem onClick={() => setPerPage(50)}>50</MenuItem>
-          <MenuItem onClick={() => setPerPage(25)}>25</MenuItem>
-          <MenuItem onClick={() => setPerPage(10)}>10</MenuItem>
-        </MenuList>
-      </Menu>
+      <Box>
+        <Menu>
+          <MenuButton size={'sm'} as={Button} rightIcon={<ChevronDownIcon />}>
+            {perPage}
+          </MenuButton>
+          <MenuList minW={'max-content'}>
+            <MenuItem onClick={() => setPerPage(50)}>50</MenuItem>
+            <MenuItem onClick={() => setPerPage(25)}>25</MenuItem>
+            <MenuItem onClick={() => setPerPage(10)}>10</MenuItem>
+          </MenuList>
+        </Menu>
+      </Box>
       <Button
         size={'sm'}
         isDisabled={page <= 1}

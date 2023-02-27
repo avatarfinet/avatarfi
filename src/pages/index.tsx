@@ -4,7 +4,7 @@ import {
   Markets,
   EditGeckoTrackedCoins,
 } from '@/components'
-import { HStack, Stack, Wrap } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 
 export default function Info() {
   return (

@@ -3,6 +3,7 @@ import { usePatchUserTrackedGeckoCoinsMutation } from '@/store'
 import {
   Button,
   HStack,
+  SlideFade,
   Stack,
   Switch,
   Tag,
@@ -11,6 +12,7 @@ import {
   Wrap,
 } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
+import { AvatarSpinner } from './ui'
 
 export default function EditGeckoTrackedCoins() {
   const dispatch = useDispatch()
@@ -33,85 +35,90 @@ export default function EditGeckoTrackedCoins() {
   const [patchTrackedGeckoCoins, trackedGeckoCoinsResult] =
     usePatchUserTrackedGeckoCoinsMutation()
 
-  if (!id || !trackedGeckoCoinsLength) return <></>
-  return (
-    <HStack
-      spacing={3}
-      p={3}
-      borderRadius={10}
-      boxShadow={`0 0 10px ${shadowColor}`}
-      border={'1px solid'}
-      borderColor={'whiteAlpha.400'}
+  const StopTracking = () => (
+    <Button
+      spinner={<AvatarSpinner />}
+      isLoading={trackedGeckoCoinsResult.isLoading}
+      onClick={() => {
+        patchTrackedGeckoCoins({
+          id,
+          selectedGeckoCoins,
+          type: 'pull',
+        }).then((res: any) => {
+          dispatch(
+            setUser({
+              trackedGeckoCoins: res.data,
+            })
+          )
+          dispatch(setComp({ selectedGeckoCoins: [] }))
+          dispatch(
+            setComp({
+              editingTrackedGeckoCoins: !editingTrackedGeckoCoins,
+            })
+          )
+        })
+      }}
+      colorScheme={'orange'}
+      size={'xs'}
     >
-      <Stack>
-        <HStack>
-          <Text>Edit</Text>
-          <Switch
-            isChecked={editingTrackedGeckoCoins}
-            onChange={() => {
-              dispatch(
-                setComp({
-                  editingTrackedGeckoCoins: !editingTrackedGeckoCoins,
-                })
-              )
-              !editingTrackedGeckoCoins &&
-                dispatch(setComp({ selectedGeckoCoins: [] }))
-            }}
-            size="md"
-          />
-        </HStack>
-        {editingTrackedGeckoCoins && selectedGeckoCoins.length && (
-          <Button
-            isLoading={trackedGeckoCoinsResult.isLoading}
-            onClick={() => {
-              patchTrackedGeckoCoins({
-                id,
-                selectedGeckoCoins,
-                type: 'pull',
-              }).then((res: any) => {
-                dispatch(
-                  setUser({
-                    trackedGeckoCoins: res.data,
-                  })
-                )
-                dispatch(setComp({ selectedGeckoCoins: [] }))
+      Stop Tracking
+    </Button>
+  )
+
+  return (
+    <SlideFade unmountOnExit in={!!id && !!trackedGeckoCoinsLength}>
+      <HStack
+        spacing={3}
+        p={3}
+        borderRadius={10}
+        boxShadow={`0 0 10px ${shadowColor}`}
+        border={'1px solid'}
+        borderColor={'whiteAlpha.400'}
+      >
+        <Stack>
+          <HStack>
+            <Text>Edit</Text>
+            <Switch
+              isChecked={editingTrackedGeckoCoins}
+              onChange={() => {
                 dispatch(
                   setComp({
                     editingTrackedGeckoCoins: !editingTrackedGeckoCoins,
                   })
                 )
-              })
-            }}
-            colorScheme={'orange'}
-            size={'xs'}
-          >
-            Stop Tracking
-          </Button>
-        )}
-      </Stack>
-      {editingTrackedGeckoCoins && (
-        <Stack
-          spacing={2}
-          p={3}
-          borderRadius={10}
-          boxShadow={`0 0 10px ${shadowColor}`}
-          border={'1px solid'}
-          borderColor={'whiteAlpha.400'}
-        >
-          {!selectedGeckoCoins.length ? (
-            <Text size={'xs'}>Please select the coins below</Text>
-          ) : (
-            <Wrap justify={'center'}>
-              <Text size={'xs'}>Selected Coins</Text>
-              {selectedGeckoCoins.map((i) => (
-                <Tag key={i} size={'sm'}>
-                  {i}
-                </Tag>
-              ))}
-            </Wrap>
-          )}
+                !editingTrackedGeckoCoins &&
+                  dispatch(setComp({ selectedGeckoCoins: [] }))
+              }}
+              size="md"
+            />
+          </HStack>
         </Stack>
-      )}
-    </HStack>
+        <SlideFade unmountOnExit in={editingTrackedGeckoCoins}>
+          <Stack
+            spacing={2}
+            p={3}
+            borderRadius={10}
+            boxShadow={`0 0 10px ${shadowColor}`}
+            border={'1px solid'}
+            borderColor={'whiteAlpha.400'}
+          >
+            <SlideFade unmountOnExit in={!selectedGeckoCoins.length}>
+              <Text size={'xs'}>Please select the coins below</Text>
+            </SlideFade>
+            <SlideFade unmountOnExit in={!!selectedGeckoCoins.length}>
+              <Wrap justify={'center'}>
+                <Text size={'xs'}>Selected Coins</Text>
+                {selectedGeckoCoins.map((i) => (
+                  <Tag key={i} size={'sm'}>
+                    {i}
+                  </Tag>
+                ))}
+                <StopTracking />
+              </Wrap>
+            </SlideFade>
+          </Stack>
+        </SlideFade>
+      </HStack>
+    </SlideFade>
   )
 }

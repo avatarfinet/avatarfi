@@ -3,23 +3,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
   Divider,
+  SlideFade,
   Heading,
   HStack,
-  Spinner,
   Stack,
   useColorModeValue,
   Wrap,
 } from '@chakra-ui/react'
 import {
-  geckoApi,
   setComp,
   setUser,
   useGetGeckoCoinsListQuery,
   useGetGeckoSearchQuery,
   usePatchUserTrackedGeckoCoinsMutation,
 } from '@/store'
-import { CWindowedSelect } from './ui'
-import Indicator from './mapItems/Market'
+import { AvatarSpinner, CWindowedSelect } from './ui'
+import Market from './mapItems/Market'
 import Link from 'next/link'
 
 export default function SearchGeckoCoins() {
@@ -45,6 +44,35 @@ export default function SearchGeckoCoins() {
     }
   )
 
+  const TrackResults = () => (
+    <Button
+      spinner={<AvatarSpinner />}
+      isLoading={trackedGeckoCoinsResult.isLoading}
+      size={'xs'}
+      onClick={() => {
+        setIsActive(false)
+        patchTrackedGeckoCoins({
+          id,
+          selectedGeckoCoins: geckoSearchValue.map((i: any) => i.value),
+          type: 'add',
+        }).then((res: any) => {
+          dispatch(
+            setUser({
+              trackedGeckoCoins: res.data,
+            })
+          )
+          dispatch(
+            setComp({
+              geckoSearchValue: [],
+            })
+          )
+        })
+      }}
+    >
+      Track Results
+    </Button>
+  )
+
   const combinedIsLoading =
     trackedGeckoCoinsResult.isLoading || geckoCoins.isLoading
   return (
@@ -57,82 +85,52 @@ export default function SearchGeckoCoins() {
       borderColor={'whiteAlpha.400'}
       borderRadius={10}
     >
-      {combinedIsLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          <Heading size={'xs'}>{`Search Gecko Coin's`}</Heading>
-          <CWindowedSelect
-            isMulti
-            placeholder="Gecko search..."
-            value={geckoSearchValue}
-            onInputChange={(e) => setOptSearch(e.charAt(0).toUpperCase())}
-            onMenuClose={() => setOptSearch('0')}
-            onChange={(e: any) => {
-              setIsActive(true)
-              dispatch(setComp({ geckoSearchValue: e }))
-            }}
-            options={(geckoCoins.data?.[optSearch] ?? []).map((x: any) => ({
-              label: `${x.symbol.toUpperCase()} / ${x.name}`,
-              value: x.id,
-            }))}
-          />
-          {geckoSearchResults.isLoading ? (
-            <Spinner alignSelf={'center'} />
-          ) : (
-            isActive && (
-              <>
-                <Stack justify={'center'}>
-                  <Divider />
-                  <HStack justify={'space-between'}>
-                    <Heading size={'xs'}>Results</Heading>
-                    {!!id ? (
-                      <Button
-                        isLoading={trackedGeckoCoinsResult.isLoading}
-                        size={'xs'}
-                        onClick={() => {
-                          patchTrackedGeckoCoins({
-                            id,
-                            selectedGeckoCoins: geckoSearchValue.map(
-                              (i: any) => i.value
-                            ),
-                            type: 'add',
-                          }).then((res: any) => {
-                            dispatch(
-                              setUser({
-                                trackedGeckoCoins: res.data,
-                              })
-                            )
-                            dispatch(
-                              setComp({
-                                geckoSearchValue: [],
-                              })
-                            )
-                            setIsActive(false)
-                          })
-                        }}
-                      >
-                        Track Results
-                      </Button>
-                    ) : (
-                      <Button size={'xs'} as={Link} href="/login">
-                        Login To Track
-                      </Button>
-                    )}
-                  </HStack>
-                  <Divider />
-                </Stack>
-                <Wrap p={1} align={'center'} justify={'center'}>
-                  {geckoSearchResults.isSuccess &&
-                    geckoSearchResults.data.map((item, index) => (
-                      <Indicator key={index} data={item} />
-                    ))}
-                </Wrap>
-              </>
-            )
-          )}
-        </>
-      )}
+      <SlideFade unmountOnExit in={combinedIsLoading}>
+        <AvatarSpinner />
+      </SlideFade>
+      <SlideFade unmountOnExit in={!combinedIsLoading}>
+        <Heading size={'xs'}>{`Search Gecko Coin's`}</Heading>
+        <CWindowedSelect
+          isMulti
+          placeholder="Gecko search..."
+          value={geckoSearchValue}
+          onInputChange={(e) => setOptSearch(e.charAt(0).toUpperCase())}
+          onMenuClose={() => setOptSearch('0')}
+          onChange={(e: any) => {
+            setIsActive(true)
+            dispatch(setComp({ geckoSearchValue: e }))
+            !e.length && setIsActive(false)
+          }}
+          options={(geckoCoins.data?.[optSearch] ?? []).map((x: any) => ({
+            label: `${x.symbol.toUpperCase()} / ${x.name}`,
+            value: x.id,
+          }))}
+        />
+        <SlideFade unmountOnExit in={geckoSearchResults.isLoading}>
+          <AvatarSpinner />
+        </SlideFade>
+        <SlideFade unmountOnExit in={!geckoSearchResults.isLoading && isActive}>
+          <Stack>
+            <Divider />
+            <HStack justify={'space-between'}>
+              <Heading size={'xs'}>Results</Heading>
+              {!!id ? (
+                <TrackResults />
+              ) : (
+                <Button size={'xs'} as={Link} href="/login">
+                  Login To Track
+                </Button>
+              )}
+            </HStack>
+            <Divider />
+          </Stack>
+          <Wrap align={'center'} justify={'center'} spacing={3} pt={3}>
+            {(geckoSearchResults.data || []).map((item, index) => (
+              <Market key={index} data={item} />
+            ))}
+          </Wrap>
+        </SlideFade>
+      </SlideFade>
     </Stack>
   )
 }
