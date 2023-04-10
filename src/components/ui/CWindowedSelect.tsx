@@ -26,19 +26,19 @@ export default function CWindowedSelect({
       color: 'current',
       textAlign: 'center',
     }),
-    menuList: (provided: any) => ({
-      ...provided,
-      color: 'red',
-      '& :first-of-type': {
-        color: 'red',
-        borderTopLeftRadius: '1rem',
-        borderTopRightRadius: '1rem',
-      },
-      '& :last-of-type': {
-        borderBottomLeftRadius: '1rem',
-        borderBottomRightRadius: '1rem',
-      },
-    }),
+    menuList: (provided: any) => {
+      return {
+        ...provided,
+        '& :first-of-type': {
+          borderTopLeftRadius: '1rem',
+          borderTopRightRadius: '1rem',
+        },
+        '& :last-of-type': {
+          borderBottomLeftRadius: '1rem',
+          borderBottomRightRadius: '1rem',
+        },
+      }
+    },
     option: (provided: any, state: any) => ({
       ...provided,
       color: state.isFocused && 'black',
