@@ -8,8 +8,6 @@ import {
   Heading,
   HStack,
   Image,
-  Slide,
-  SlideFade,
   Stack,
   Text,
   useColorMode,
@@ -17,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { ProfileIcon, StockIcon } from '../ui'
+import { PortfolioIcon, ProfileIcon, StockIcon } from '../ui'
 
 export default function Navbar() {
   const location = useRouter()
@@ -58,7 +56,7 @@ export default function Navbar() {
           icon: <Heading size={'xs'}>Login</Heading>,
         }
       } else {
-        result[2] = {
+        result[3] = {
           name: 'profile',
           path: '/profile',
           icon: (
@@ -68,8 +66,18 @@ export default function Navbar() {
             />
           ),
         }
+        result[2] = {
+          name: 'portfolio',
+          path: '/portfolio',
+          icon: (
+            <PortfolioIcon
+              w={size}
+              fill={clientLoc === `/portfolio` ? 'blue.300' : initalColor}
+            />
+          ),
+        }
         if (isAdmin)
-          result[3] = {
+          result[4] = {
             name: 'panel',
             path: '/panel',
             icon: <Image w={size} aria-label="Panel" src="keypad.svg" />,

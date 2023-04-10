@@ -26,7 +26,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     if (!authId && !!clientAuth().get('avatarfi_access_token'))
       clientAuth().remove({ field: 'avatarfi_access_token', path: '/' })
 
-    if (!authId) router.push('/')
+    if (!authId && ['/profile', '/portfolio'].includes(router.pathname))
+      router.push('/')
 
     if (!!authId)
       getUserFields({ id: authId, fields: ['trackedGeckoCoins'] })

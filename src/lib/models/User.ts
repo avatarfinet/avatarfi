@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   phone: { type: String },
   pwdResetToken: { type: String },
   pwdResetExpiration: { type: Number },
+  portfolio: { type: Array },
   // UTIL DATA
   trackedGeckoCoins: { type: [String] },
   // DATE
