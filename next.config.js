@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-  env: {
-    ENV: process.env.ENV,
+  reactStrictMode: true,
+  experimental: {
+    serverActions: true,
+    serverComponentsExternalPackages: ['mongoose'],
   },
 }
 
