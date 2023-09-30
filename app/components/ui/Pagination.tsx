@@ -1,13 +1,6 @@
-import { ChevronDownIcon } from '@chakra-ui/icons'
-import {
-  Box,
-  Button,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-} from '@chakra-ui/react'
+import { DownOutlined } from '@ant-design/icons'
+import { Button, Dropdown, Menu } from 'antd'
+import React from 'react'
 
 function range(start: number, end: number | string) {
   let foo = []
@@ -31,23 +24,23 @@ export default function Pagination({
   setPerPage: (page: number) => any
 }) {
   const pageRange = range(1, Math.round(total / perPage) || 1)
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={() => setPerPage(50)}>50</Menu.Item>
+      <Menu.Item onClick={() => setPerPage(25)}>25</Menu.Item>
+      <Menu.Item onClick={() => setPerPage(10)}>10</Menu.Item>
+    </Menu>
+  )
   return (
-    <HStack spacing={2}>
-      <Box>
-        <Menu>
-          <MenuButton size={'sm'} as={Button} rightIcon={<ChevronDownIcon />}>
-            {perPage}
-          </MenuButton>
-          <MenuList minW={'max-content'}>
-            <MenuItem onClick={() => setPerPage(50)}>50</MenuItem>
-            <MenuItem onClick={() => setPerPage(25)}>25</MenuItem>
-            <MenuItem onClick={() => setPerPage(10)}>10</MenuItem>
-          </MenuList>
-        </Menu>
-      </Box>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Dropdown overlay={menu}>
+        <Button size="small">
+          {perPage} <DownOutlined />
+        </Button>
+      </Dropdown>
       <Button
-        size={'sm'}
-        isDisabled={page <= 1}
+        size="small"
+        disabled={page <= 1}
         onClick={() => setPage(page - 1)}
       >
         -
@@ -55,20 +48,20 @@ export default function Pagination({
       {pageRange.map((i) => (
         <Button
           key={i}
-          size={'sm'}
-          colorScheme={page === i ? 'blue' : 'gray'}
+          size="small"
+          type={page === i ? 'primary' : 'default'}
           onClick={() => setPage(i)}
         >
           {i}
         </Button>
       ))}
       <Button
-        isDisabled={pageRange.length <= 1}
-        size={'sm'}
+        disabled={pageRange.length <= 1}
+        size="small"
         onClick={() => setPage(page + 1)}
       >
         +
       </Button>
-    </HStack>
+    </div>
   )
 }

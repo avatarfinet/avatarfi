@@ -1,8 +1,8 @@
 import { useAppSelector, useGetGeckoMarketsQuery } from '@/lib/store'
-import { SlideFade, Wrap } from '@chakra-ui/react'
+import { Spin, Space } from 'antd'
 import { useDispatch } from 'react-redux'
-import Market from '../mapItems/Market'
 import { AvatarSpinner } from '../ui'
+import Market from '../mapItems/Market'
 
 export default function Markets() {
   const dispatch = useDispatch()
@@ -18,19 +18,18 @@ export default function Markets() {
   const trackedGeckoCoins = useAppSelector(
     (state) => state.user.trackedGeckoCoins
   )
+
   const geckoMarkets = useGetGeckoMarketsQuery({
     ids: trackedGeckoCoins,
     perPage,
     page,
   })
 
+  // Replace Chakra-UI Wrap with Ant Design Space
   return (
     <>
-      <SlideFade unmountOnExit in={geckoMarkets.isLoading}>
-        <AvatarSpinner />
-      </SlideFade>
-      <SlideFade unmountOnExit in={!geckoMarkets.isLoading}>
-        <Wrap spacing={3} align={'center'} justify={'center'} p={3}>
+      <Spin spinning={geckoMarkets.isLoading} indicator={<AvatarSpinner />}>
+        <Space size={3} align={'center'} style={{ padding: 3 }}>
           {(geckoMarkets.data ?? [])
             .slice() // For Strict Mode Only
             .sort((a, b) =>
@@ -46,8 +45,8 @@ export default function Markets() {
                 editing={editingTrackedGeckoCoins}
               />
             ))}
-        </Wrap>
-      </SlideFade>
+        </Space>
+      </Spin>
     </>
   )
 }

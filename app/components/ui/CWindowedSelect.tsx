@@ -1,16 +1,14 @@
 import { Props as SelectProps } from 'react-select'
 import WindowedSelect from 'react-windowed-select'
 import { createFilter } from 'react-select'
-import { useColorModeValue } from '@chakra-ui/react'
 
 export default function CWindowedSelect({
   ...props
 }: SelectProps & React.RefAttributes<unknown>) {
-  const bgColor = useColorModeValue('white', '#2E303A')
   const selectStyles = {
     control: (provided: any) => ({
       ...provided,
-      backgroundColor: bgColor,
+      // backgroundColor: bgColor,
       borderRadius: '1rem',
       minWidth: '200px',
     }),
@@ -21,7 +19,7 @@ export default function CWindowedSelect({
     menu: (provided: any) => ({
       ...provided,
       borderRadius: '1rem',
-      backgroundColor: bgColor,
+      // backgroundColor: bgColor,
       fontSize: 10,
       color: 'current',
       textAlign: 'center',

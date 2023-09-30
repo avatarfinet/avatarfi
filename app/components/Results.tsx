@@ -1,8 +1,8 @@
-'use client'
-
-import { Box, Flex, Heading, VStack, Text } from '@chakra-ui/react'
+import { Space, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { portStatusCalc } from '../lib/utils/Calculations'
+
+const { Title, Text } = Typography
 
 export const Results = ({ isLoading, prices, portfolio }: any) => {
   const [state, setState] = useState({
@@ -39,88 +39,88 @@ export const Results = ({ isLoading, prices, portfolio }: any) => {
   let fT = state.fundingTotal
 
   return (
-    <VStack
-      align="center"
-      py={3}
-      spacing={4}
-      borderWidth="1px"
-      borderRadius="md"
-      borderColor="blackAlpha.200"
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 12,
+        margin: 12,
+        border: '1px solid rgba(0, 0, 0, 0.2)',
+        borderRadius: 4,
+      }}
     >
-      <Heading as="h4" size="lg" mb={2} pt={0}>
+      <Title level={4} style={{ marginBottom: '10px' }}>
         Portfolio Results
-      </Heading>
-      <Flex align="center" ml="auto">
-        <Text fontSize="lg" px={2}>
+      </Title>
+      <Space align="center">
+        <Text style={{ fontSize: '16px', paddingRight: '10px' }}>
           Current Total:{' '}
           <Text
-            as="span"
-            fontWeight="bold"
-            color={
-              eT <= 0
-                ? cT < fT
-                  ? 'yellow.500'
-                  : 'green.500'
-                : cT < eT
-                ? 'yellow.500'
-                : 'green.500'
-            }
+            strong
+            style={{
+              color:
+                eT <= 0
+                  ? cT < fT
+                    ? 'yellow'
+                    : 'green'
+                  : cT < eT
+                  ? 'yellow'
+                  : 'green',
+            }}
           >
             &nbsp;${isNaN(cT) ? 0 : +parseFloat(cT.toFixed(0))}
           </Text>
         </Text>
-      </Flex>
-      <Flex align="center" ml="auto" px={2}>
+      </Space>
+      <Space align="center">
         Potential l/p:{' '}
         <Text
-          as="span"
-          fontWeight="bold"
-          color={uRL < 0 ? 'yellow.500' : 'green.500'}
+          strong
+          style={{ color: uRL < 0 ? 'yellow' : 'green', paddingLeft: '10px' }}
         >
           &nbsp;${+parseFloat(uRL.toFixed(0))}
         </Text>
-      </Flex>
-      <Flex align="center" ml="auto" px={2}>
+      </Space>
+      <Space align="center" style={{ marginLeft: 'auto' }}>
         Realized l/p:{' '}
         <Text
-          as="span"
-          fontWeight="bold"
-          color={rP < 0 ? 'yellow.500' : 'green.500'}
+          strong
+          style={{ color: rP < 0 ? 'yellow' : 'green', paddingLeft: '10px' }}
         >
           &nbsp;${+parseFloat(rP.toFixed(0))}
         </Text>
-      </Flex>
-      <Flex justifyContent="center">
-        <Box px={2}>
+      </Space>
+      <Space style={{ justifyContent: 'center' }}>
+        <div>
           <Text>
             Entry:{' '}
-            <Text as="span" fontWeight="bold" fontSize="sm" pt={1}>
+            <Text
+              strong
+              style={{ fontSize: '14px', paddingTop: '5px', display: 'block' }}
+            >
               {isNaN(eT) ? (
                 0
               ) : (
                 <>
-                  <Text as="span">{+parseFloat(eC.toFixed(0))}</Text> -{' '}
-                  <Text as="span">
-                    {rP <= 0 ? 0 : +parseFloat(rP.toFixed(0))}
-                  </Text>{' '}
-                  = {eT < 0 ? '+' : null}$
-                  <Text as="span">
-                    {+parseFloat((eT < 0 ? eT * -1 : eT).toFixed(0))}
-                  </Text>
+                  <Text>{+parseFloat(eC.toFixed(0))}</Text> -{' '}
+                  <Text>{rP <= 0 ? 0 : +parseFloat(rP.toFixed(0))}</Text> ={' '}
+                  {eT < 0 ? '+' : null}$
+                  <Text>{+parseFloat((eT < 0 ? eT * -1 : eT).toFixed(0))}</Text>
                 </>
               )}
             </Text>
           </Text>
-        </Box>
-        <Box px={2}>
+        </div>
+        <div>
           <Text>
             Funding: <br />
-            <Text as="span" fontWeight="bold">
+            <Text strong style={{ fontSize: '14px' }}>
               ${isNaN(fT) ? 0 : +parseFloat(fT.toFixed(0))}
             </Text>
           </Text>
-        </Box>
-      </Flex>
-    </VStack>
+        </div>
+      </Space>
+    </div>
   )
 }

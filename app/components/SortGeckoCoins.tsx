@@ -1,7 +1,9 @@
 import { setIndicatorSortPorps, useAppSelector } from '@/lib/store'
-import { Button, Center, Heading, Switch, Text, Wrap } from '@chakra-ui/react'
+import { Button, Switch, Typography } from 'antd'
 import { useDispatch } from 'react-redux'
 import { Pagination } from './ui'
+
+const { Title, Text } = Typography
 
 export default function SortGeckoCoins() {
   const dispatch = useDispatch()
@@ -14,8 +16,10 @@ export default function SortGeckoCoins() {
   const { sortBy, perPage, page, desc } = indicatorSortPorps
   return (
     <>
-      <Wrap align={'center'} justify={'center'} p={3}>
-        <Heading size={'xs'}>Sort by</Heading>
+      <div style={{ display: 'flex', alignItems: 'center', padding: '12px' }}>
+        <Title level={5} style={{ margin: 0, marginRight: '12px' }}>
+          Sort by
+        </Title>
         {[
           { title: 'Market Cap', value: 'market_cap' },
           {
@@ -34,10 +38,10 @@ export default function SortGeckoCoins() {
           { title: 'Max Supply', value: 'max_supply' },
           { title: 'Circ Supply', value: 'total_supply' },
         ].map((i) => (
-          <Center gap={2} key={i.value}>
+          <div key={i.value} style={{ display: 'flex', alignItems: 'center' }}>
             <Button
-              colorScheme={sortBy === i.value ? 'blue' : 'gray'}
-              size={'xs'}
+              type={sortBy === i.value ? 'primary' : 'default'}
+              size={'small'}
               onClick={() =>
                 dispatch(
                   setIndicatorSortPorps({
@@ -48,16 +52,21 @@ export default function SortGeckoCoins() {
             >
               {i.title}
             </Button>
-            <Heading size={'md'}>|</Heading>
-          </Center>
+            <Title
+              level={5}
+              style={{ margin: 0, marginLeft: '12px', marginRight: '12px' }}
+            >
+              |
+            </Title>
+          </div>
         ))}
         <Text>Reverse</Text>
         <Switch
-          isChecked={!desc}
+          checked={!desc}
           onChange={() => dispatch(setIndicatorSortPorps({ desc: !desc }))}
-          size="md"
+          size="small"
         />
-      </Wrap>
+      </div>
       <Pagination
         total={trackedGeckoCoinsLength || 50}
         perPage={perPage}

@@ -1,4 +1,4 @@
-import { Image, Slide, useColorModeValue } from '@chakra-ui/react'
+/* import { Image, Slide, useColorModeValue } from '@chakra-ui/react'
 
 export default function PageSpinner({
   routeLoading,
@@ -28,3 +28,6 @@ export default function PageSpinner({
     </Slide>
   )
 }
+ */
+
+export {}

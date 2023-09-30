@@ -6,17 +6,17 @@ import {
   Markets,
   EditGeckoTrackedCoins,
 } from '@/components'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Space } from 'antd'
 
 export default function Info() {
   return (
-    <Stack align={'center'}>
-      <HStack flexWrap={'wrap'} justify={'center'} gap={3}>
+    <Space align={'center'}>
+      <Space wrap align={'center'} size={3}>
         <EditGeckoTrackedCoins />
         <SearchGeckoCoins />
-      </HStack>
+      </Space>
       <SortGeckoCoins />
       <Markets />
-    </Stack>
+    </Space>
   )
 }

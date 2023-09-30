@@ -1,7 +1,9 @@
 import { statusWidgetCalc } from '@/lib/utils/Calculations'
 import { AvatarSpinner } from '../ui'
-import { Flex, Divider, Box, Text, Image } from '@chakra-ui/react'
+import { Divider, Typography, Image } from 'antd'
 import { Prices } from '@/portfolio/page'
+
+const { Text } = Typography
 
 export const ProtfolioAssets = ({
   isLoading,
@@ -28,43 +30,52 @@ export const ProtfolioAssets = ({
               <></>
             ) : (
               <>
-                <Flex align="center" justify="space-between" p={3}>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    m={1}
-                    fontSize="sm"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    borderColor="blackAlpha.100"
-                    py={2}
-                    px={3}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      margin: '4px',
+                      fontSize: '14px',
+                      border: '1px solid #f0f0f0',
+                      borderRadius: '4px',
+                      padding: '8px',
+                    }}
                   >
                     <Image
-                      borderRadius="full"
-                      boxSize="20px"
-                      mr={2}
+                      width={20}
+                      height={20}
                       src={prices[f.value].image}
                       alt={f.value + '-img'}
+                      preview={false}
+                      style={{ borderRadius: '50%', marginRight: '8px' }}
                     />
-                    <Text fontWeight="bold">{f.ticker}</Text>
-                    <Text ml={2}>
+                    <Text strong>{f.ticker}</Text>
+                    <Text style={{ marginLeft: '8px' }}>
                       ${+parseFloat(String(prices[f.value].usd)).toFixed(3)}
                     </Text>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    borderColor="blackAlpha.200"
-                    p={2}
-                    ml={1}
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      border: '1px solid #f0f0f0',
+                      borderRadius: '4px',
+                      padding: '8px',
+                      marginLeft: '4px',
+                    }}
                   >
                     <Text
-                      fontWeight="bold"
-                      color={lossProfit < 0 ? 'yellow.500' : 'green.500'}
+                      strong
+                      style={{ color: lossProfit < 0 ? 'yellow' : 'green' }}
                     >
                       L/P $
                       {isNaN(lossProfit)
@@ -74,24 +85,25 @@ export const ProtfolioAssets = ({
                     <Text>
                       {+parseFloat(String(f.amount)).toFixed(2)} {f.ticker}
                     </Text>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    borderColor="blackAlpha.200"
-                    p={2}
-                    ml={1}
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      border: '1px solid #f0f0f0',
+                      borderRadius: '4px',
+                      padding: '8px',
+                      marginLeft: '4px',
+                    }}
                   >
-                    <Text mb={1}>
+                    <Text style={{ marginBottom: '8px' }}>
                       now $
                       {isNaN(currTotal)
                         ? 0
                         : +parseFloat(String(currTotal)).toFixed(0)}
                     </Text>
-                    <Text mb={1}>
+                    <Text style={{ marginBottom: '8px' }}>
                       cost $
                       {isNaN(entryTotal)
                         ? 0
@@ -103,8 +115,8 @@ export const ProtfolioAssets = ({
                         ? 0
                         : +parseFloat(String(f.price)).toFixed(3)}
                     </Text>
-                  </Box>
-                </Flex>
+                  </div>
+                </div>
                 <Divider />
               </>
             )}

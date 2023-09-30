@@ -1,8 +1,6 @@
 'use client'
 
-import React from 'react'
-import { ChakraProvider } from '@chakra-ui/react'
-import theme from '@/lib/styles/theme'
+import AntDesignProvider from './AntDesignProvider'
 import AppProvider from './appContext'
 import ReduxProvider from '@/lib/store/ReduxProvider'
 
@@ -13,9 +11,9 @@ export default function ClientProviders({
 }) {
   return (
     <ReduxProvider>
-      <ChakraProvider theme={theme}>
+      <AntDesignProvider>
         <AppProvider>{children}</AppProvider>
-      </ChakraProvider>
+      </AntDesignProvider>
     </ReduxProvider>
   )
 }
