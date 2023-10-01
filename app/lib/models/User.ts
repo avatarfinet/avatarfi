@@ -1,5 +1,5 @@
-// import { MongoGenericModel } from '@/types/mongodb'
-import { model, Schema /* , models */ } from 'mongoose'
+import { MongoGenericModel } from '@/types/mongodb'
+import { model, Schema, models } from 'mongoose'
 
 // Create Schema
 const UserSchema = new Schema({
@@ -20,8 +20,7 @@ const UserSchema = new Schema({
 })
 
 const User =
-  /* 
-  (models.users as MongoGenericModel<typeof UserSchema>) || */
+  (models.users as MongoGenericModel<typeof UserSchema>) ||
   model('users', UserSchema)
 
 export default User

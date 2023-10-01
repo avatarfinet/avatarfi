@@ -1,5 +1,7 @@
+'use client'
+
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import {
   Button,
   Divider,
@@ -13,6 +15,7 @@ import {
 import {
   setComp,
   setUser,
+  useAppSelector,
   useGetGeckoCoinsListQuery,
   useGetGeckoSearchQuery,
   usePatchUserTrackedGeckoCoinsMutation,
@@ -20,28 +23,33 @@ import {
 import { AvatarSpinner, CWindowedSelect } from './ui'
 import Market from './mapItems/Market'
 import Link from 'next/link'
+import { useIsHydrated } from '@/hooks'
 
 export default function SearchGeckoCoins() {
+  const isHydradet = useIsHydrated()
   const dispatch = useDispatch()
   const [optSearch, setOptSearch] = useState('0')
   const [isActive, setIsActive] = useState(false)
-  const { id } = useSelector((state: RootState) => state.auth)
-  const shadowColor = useColorModeValue(
-    'rgba(0, 0, 0, 0.05)',
-    'rgb(250, 250, 250, 0.05)'
-  )
-  const geckoSearchValue = useSelector(
-    (state: RootState) => state.comp.geckoSearchValue
-  )
-  const geckoCoins = useGetGeckoCoinsListQuery({})
+  const { id, geckoSearchValue } = useAppSelector((state) => ({
+    id: state.auth.id,
+    geckoSearchValue: state.comp.geckoSearchValue,
+  }))
+
+  const geckoCoinsQuery = useGetGeckoCoinsListQuery()
 
   const [patchTrackedGeckoCoins, trackedGeckoCoinsResult] =
     usePatchUserTrackedGeckoCoinsMutation()
-  const geckoSearchResults = useGetGeckoSearchQuery(
+
+  const geckoSearchQuery = useGetGeckoSearchQuery(
     { ids: geckoSearchValue.map((i: any) => i.value) },
     {
       skip: !geckoSearchValue.length,
     }
+  )
+
+  const shadowColor = useColorModeValue(
+    'rgba(0, 0, 0, 0.05)',
+    'rgb(250, 250, 250, 0.05)'
   )
 
   const TrackResults = () => (
@@ -74,7 +82,8 @@ export default function SearchGeckoCoins() {
   )
 
   const combinedIsLoading =
-    trackedGeckoCoinsResult.isLoading || geckoCoins.isLoading
+    trackedGeckoCoinsResult.isLoading || geckoCoinsQuery.isLoading
+
   return (
     <Stack
       justify={'center'}
@@ -85,52 +94,60 @@ export default function SearchGeckoCoins() {
       borderColor={'whiteAlpha.400'}
       borderRadius={10}
     >
-      <SlideFade unmountOnExit in={combinedIsLoading}>
-        <AvatarSpinner />
-      </SlideFade>
-      <SlideFade unmountOnExit in={!combinedIsLoading}>
-        <Heading size={'xs'}>{`Search Gecko Coin's`}</Heading>
-        <CWindowedSelect
-          isMulti
-          placeholder="Gecko search..."
-          value={geckoSearchValue}
-          onInputChange={(e) => setOptSearch(e.charAt(0).toUpperCase())}
-          onMenuClose={() => setOptSearch('0')}
-          onChange={(e: any) => {
-            setIsActive(true)
-            dispatch(setComp({ geckoSearchValue: e }))
-            !e.length && setIsActive(false)
-          }}
-          options={(geckoCoins.data?.[optSearch] ?? []).map((x: any) => ({
-            label: `${x.symbol.toUpperCase()} / ${x.name}`,
-            value: x.id,
-          }))}
-        />
-        <SlideFade unmountOnExit in={geckoSearchResults.isLoading}>
-          <AvatarSpinner />
-        </SlideFade>
-        <SlideFade unmountOnExit in={!geckoSearchResults.isLoading && isActive}>
-          <Stack>
-            <Divider />
-            <HStack justify={'space-between'}>
-              <Heading size={'xs'}>Results</Heading>
-              {!!id ? (
-                <TrackResults />
-              ) : (
-                <Button size={'xs'} as={Link} href="/login">
-                  Login To Track
-                </Button>
+      {(() => {
+        if (!isHydradet || combinedIsLoading || geckoSearchQuery.isLoading)
+          return <AvatarSpinner />
+
+        return (
+          <SlideFade unmountOnExit in={!combinedIsLoading}>
+            <Heading size={'xs'}>{`Search Gecko Coin's`}</Heading>
+            <CWindowedSelect
+              isMulti
+              placeholder="Gecko search..."
+              value={geckoSearchValue}
+              onInputChange={(e) => setOptSearch(e.charAt(0).toUpperCase())}
+              onMenuClose={() => setOptSearch('0')}
+              onChange={(e: any) => {
+                setIsActive(true)
+                dispatch(setComp({ geckoSearchValue: e }))
+                !e.length && setIsActive(false)
+              }}
+              options={(geckoCoinsQuery.data?.[optSearch] ?? []).map(
+                (x: any) => ({
+                  label: `${x.symbol.toUpperCase()} / ${x.name}`,
+                  value: x.id,
+                })
               )}
-            </HStack>
-            <Divider />
-          </Stack>
-          <Wrap align={'center'} justify={'center'} spacing={3} pt={3}>
-            {(geckoSearchResults.data || []).map((item, index) => (
-              <Market key={index} data={item} />
-            ))}
-          </Wrap>
-        </SlideFade>
-      </SlideFade>
+            />
+
+            <SlideFade
+              unmountOnExit
+              in={!geckoSearchQuery.isLoading && isActive}
+            >
+              <Stack>
+                <Divider />
+                <HStack justify={'space-between'}>
+                  <Heading size={'xs'}>Results</Heading>
+                  {!!id ? (
+                    <TrackResults />
+                  ) : (
+                    <Button size={'xs'} as={Link} href="/login">
+                      Login To Track
+                    </Button>
+                  )}
+                </HStack>
+                <Divider />
+              </Stack>
+
+              <Wrap align={'center'} justify={'center'} spacing={3} pt={3}>
+                {(geckoSearchQuery.data || []).map((item, index) => (
+                  <Market key={index} data={item} />
+                ))}
+              </Wrap>
+            </SlideFade>
+          </SlideFade>
+        )
+      })()}
     </Stack>
   )
 }

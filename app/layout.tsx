@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import ClientProviders from './client.providers'
-import RootClientLayout from './client.layout'
+import { Stack, Box } from '@chakra-ui/react'
+import Footer from './components/Footer'
+import Navbar from './components/Navbar'
+import Providers from './providers'
 import './global.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -41,9 +43,21 @@ function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientProviders>
-          <RootClientLayout>{children}</RootClientLayout>
-        </ClientProviders>
+        <Providers>
+          <Box>
+            <Navbar />
+            <Stack
+              align={'center'}
+              justify={'center'}
+              overflow="scroll"
+              p={3}
+              minH={'calc(100vh - 100px)'}
+            >
+              {children}
+            </Stack>
+            <Footer />
+          </Box>
+        </Providers>
       </body>
     </html>
   )

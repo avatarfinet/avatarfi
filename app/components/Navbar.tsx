@@ -10,26 +10,24 @@ import {
   HStack,
   Image,
   Stack,
+  StackProps,
   Text,
   useColorMode,
-  useColorModeValue,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { PortfolioIcon, ProfileIcon, StockIcon } from '../components/ui'
 import { useAppSelector } from '@/lib/store'
+import { useIsHydrated } from '@/hooks'
 
-export default function Navbar() {
+export default function Navbar({ ...styles }: StackProps) {
   const clientLoc = usePathname()
   const { colorMode, toggleColorMode } = useColorMode()
-  const shadowColor = useColorModeValue(
-    'rgb(125, 125, 125, 0.2)',
-    'rgb(250, 250, 250, 0.1)'
-  )
-  const itemBgColor = useColorModeValue('gray.100', 'whiteAlpha.200')
+
   const initalColor = colorMode === 'dark' ? 'white' : 'black'
   const auth = useAppSelector((state) => state.auth)
 
+  const isHydradet = useIsHydrated()
   const isLoggedIn = !!auth.id
   const isAdmin = auth.role === 'admin'
 
@@ -47,14 +45,17 @@ export default function Navbar() {
           ),
         },
       ]
+
+      if (!isHydradet) return result
+
       if (!isLoggedIn) {
         result[4] = {
-          path: '/signup',
-          icon: <Heading size={'xs'}>Signup</Heading>,
-        }
-        result[5] = {
           path: '/login',
-          icon: <Heading size={'xs'}>Login</Heading>,
+          icon: (
+            <Heading size={'xs'} p={2}>
+              Login
+            </Heading>
+          ),
         }
       } else {
         result[3] = {
@@ -94,8 +95,7 @@ export default function Navbar() {
           align="center"
           color={clientLoc === x.path ? 'blue.300' : initalColor}
           fontWeight={550}
-          /* bg={`rgba(255, 255, 255, ${clientLoc === x.path ? '0.3' : '0.08'})`} */
-          bg={itemBgColor}
+          bg={colorMode === 'light' ? 'gray.100' : 'whiteAlpha.200'}
           p={1.5}
           borderRadius="1rem"
         >
@@ -105,13 +105,18 @@ export default function Navbar() {
       </Link>
     ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientLoc, isAdmin, isLoggedIn, colorMode])
+  }, [isHydradet, clientLoc, isAdmin, isLoggedIn, colorMode])
 
   return (
     <Stack
-      boxShadow={`0 0 10px ${shadowColor}`}
+      boxShadow={`0 0 10px ${
+        colorMode === 'light'
+          ? 'rgb(125, 125, 125, 0.2)'
+          : 'rgb(250, 250, 250, 0.1)'
+      }`}
       borderBottom={'1px solid'}
       borderColor={'whiteAlpha.400'}
+      {...styles}
     >
       <HStack spacing={5} p={2} justify={'center'}>
         <Link href={'/'}>

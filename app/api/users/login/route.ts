@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
         { emailIsRegistered: false },
         {
           status: 404,
+          headers: { 'content-type': 'application/json' },
         }
       )
     }
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
         { passwordIsMatch: false },
         {
           status: 403,
+          headers: { 'content-type': 'application/json' },
         }
       )
     }
@@ -59,15 +61,21 @@ export async function POST(req: NextRequest) {
       )
     })
 
-    return NextResponse.json({
-      token,
-      id,
-      role,
-      email: userEmail,
-      name,
-      surname,
-      phone,
-    })
+    const response = NextResponse.json(
+      {
+        id,
+        role,
+        email: userEmail,
+        name,
+        surname,
+        phone,
+      },
+      { status: 200, headers: { 'content-type': 'application/json' } }
+    )
+
+    response.cookies.set({ name: 'jwt', value: token!, path: '/' })
+
+    return response
   } catch {
     return new Response('Failed to perform user check!', { status: 500 })
   }

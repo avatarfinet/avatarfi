@@ -5,7 +5,7 @@ export default async function serverAuth(
   req: NextRequest,
   role?: 'user' | 'admin' | 'super'
 ) {
-  const cookies = req.cookies.get('avatarfi_access_token')
+  const cookies = req.cookies.get('jwt')
   const token = cookies?.value ?? ''
   try {
     // VERIFY COOKIE

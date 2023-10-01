@@ -20,7 +20,7 @@ export const ProtfolioAssets = ({
     <>
       {statusWidgetCalc(portfolio).map((f, index) => {
         const entryTotal = f.amount * f.price
-        const currTotal = f.amount * prices[f.value].usd
+        const currTotal = f.amount * prices?.[f.value].usd
         const lossProfit = Number(currTotal) - Number(entryTotal)
         return (
           <div key={index}>
@@ -44,12 +44,12 @@ export const ProtfolioAssets = ({
                       borderRadius="full"
                       boxSize="20px"
                       mr={2}
-                      src={prices[f.value].image}
+                      src={prices?.[f.value].image}
                       alt={f.value + '-img'}
                     />
                     <Text fontWeight="bold">{f.ticker}</Text>
                     <Text ml={2}>
-                      ${+parseFloat(String(prices[f.value].usd)).toFixed(3)}
+                      ${+parseFloat(String(prices?.[f.value].usd)).toFixed(3)}
                     </Text>
                   </Box>
                   <Box

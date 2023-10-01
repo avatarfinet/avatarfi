@@ -1,9 +1,3 @@
-import axios, { AxiosPromise } from 'axios'
-
-const transport = axios.create({
-  withCredentials: true,
-})
-
 export function postSignup(userData: {
   email: string
   name?: string
@@ -11,22 +5,25 @@ export function postSignup(userData: {
   phone?: string
   password: string
 }) {
-  return axios.post(`/api/users/signup`, userData)
+  return fetch(`/api/users/signup`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  })
 }
 
-export function postLogin(userData: {
-  email: string
-  password: string
-}): AxiosPromise<{
-  token: string
-  id: string
-  role: string
-  email: string
-  name?: string
-  surname?: string
-  phone?: string
-}> {
-  return axios.post(`/api/users/login`, userData)
+export async function postLogin(userData: { email: string; password: string }) {
+  return await fetch(`/api/users/login`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  })
 }
 
 export function postResetPwd({
@@ -38,7 +35,14 @@ export function postResetPwd({
   origin: string
   userAgent: string
 }) {
-  return axios.post('/api/users/reset-pwd', { email, origin, userAgent })
+  return fetch('/api/users/reset-pwd', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, origin, userAgent }),
+  })
 }
 
 export function postNewPwd({
@@ -48,7 +52,14 @@ export function postNewPwd({
   pwdResetToken: any
   password: string
 }) {
-  return axios.post('/api/users/new-pwd', { pwdResetToken, password })
+  return fetch('/api/users/new-pwd', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ pwdResetToken, password }),
+  })
 }
 
 export function putUserField({
@@ -62,8 +73,15 @@ export function putUserField({
   field: string
   value: string
 }) {
-  return transport.put(`/api/users?id=${id}&action=${actionType}`, {
-    [field]: value,
+  return fetch(`/api/users?id=${id}&action=${actionType}`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      [field]: value,
+    }),
   })
 }
 
@@ -74,5 +92,21 @@ export function getUserFields({
   id: string
   fields: string[]
 }) {
-  return axios.get(`/api/users?id=${id}&fields=${fields.join('%20')}`)
+  return fetch(`/api/users?id=${id}&fields=${fields.join('%20')}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
+export function getSignout() {
+  return fetch(`/api/users/signout`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 }

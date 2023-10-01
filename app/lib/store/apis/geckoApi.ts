@@ -12,13 +12,6 @@ export const geckoApi = mainApi.injectEndpoints({
       query: ({ ids }) =>
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc`,
     }),
-    // MARQUE RESULTS
-    getGeckoMarqueMarkets: builder.query<GeckoMarketResult[], {}>({
-      query: () =>
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${[].join(
-          '%2C'
-        )}&order=market_cap_desc&price_change_percentage=24h`,
-    }),
     // INDICATORS
     getGeckoMarkets: builder.query<
       GeckoMarketResult[],
@@ -31,6 +24,7 @@ export const geckoApi = mainApi.injectEndpoints({
           page ?? 1
         }&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C`,
       providesTags: ['GeckoMarketResult'],
+      keepUnusedDataFor: 60 * 60 * 1, // 1 minutes
     }),
     // USER TRACKED GECKO COINS
     patchUserTrackedGeckoCoins: builder.mutation<
@@ -57,7 +51,6 @@ export const geckoApi = mainApi.injectEndpoints({
 // auto-generated based on the defined endpoints
 export const {
   useGetGeckoSearchQuery,
-  useGetGeckoMarqueMarketsQuery,
   useGetGeckoMarketsQuery,
   usePatchUserTrackedGeckoCoinsMutation,
 } = geckoApi

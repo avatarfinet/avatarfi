@@ -40,9 +40,8 @@ export default function Signup() {
     onSubmit: (values, actions) => {
       const { setSubmitting, setFieldError } = actions
       postNewPwd({ pwdResetToken, password: values.password })
-        .then((res) => {
-          console.log('fire')
-          setHelperText(res.data)
+        .then(async (res) => {
+          setHelperText(await res.json())
           router.push('/login')
           setSubmitting(false)
         })

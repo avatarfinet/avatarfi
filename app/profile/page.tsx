@@ -1,10 +1,13 @@
+'use client'
+
 import {
   PUT_USER_NAME,
   PUT_USER_PHONE,
   PUT_USER_SURNAME,
+  handleSignout,
   putUserField,
 } from '@/lib'
-import { resetAuth, resetUser, setAuth } from '@/lib/store'
+import { setAuth, useAppSelector } from '@/lib/store'
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'
 import {
   Button,
@@ -22,11 +25,12 @@ import {
 } from '@chakra-ui/react'
 import isEmpty from 'is-empty'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 export default function Profile() {
   const dispatch = useDispatch()
-  const auth = useSelector((state: RootState) => state.auth)
+  const auth = useAppSelector((state) => state.auth)
+
   const { id, role } = auth
   const [state, setState] = useState({
     email: auth.email,
@@ -35,39 +39,6 @@ export default function Profile() {
     phone: auth.phone,
   })
   const { email, name, surname, phone } = state
-
-  function EditableControls() {
-    const {
-      isEditing,
-      getSubmitButtonProps,
-      getCancelButtonProps,
-      getEditButtonProps,
-    } = useEditableControls()
-
-    return isEditing ? (
-      <ButtonGroup justifyContent="center" size="sm">
-        <IconButton
-          aria-label="check-icon"
-          icon={<CheckIcon />}
-          {...getSubmitButtonProps()}
-        />
-        <IconButton
-          aria-label="close-icon"
-          icon={<CloseIcon />}
-          {...getCancelButtonProps()}
-        />
-      </ButtonGroup>
-    ) : (
-      <Flex justifyContent="center">
-        <IconButton
-          aria-label="edit-button"
-          size="sm"
-          icon={<EditIcon />}
-          {...getEditButtonProps()}
-        />
-      </Flex>
-    )
-  }
 
   return (
     <>
@@ -78,8 +49,7 @@ export default function Profile() {
         size={'xs'}
         w={'max-content'}
         onClick={() => {
-          dispatch(resetAuth())
-          dispatch(resetUser())
+          handleSignout(dispatch)
         }}
       >
         Logout
@@ -98,7 +68,10 @@ export default function Profile() {
               field: 'name',
               value: name,
             })
-              .then((res) => dispatch(setAuth({ name: res.data as string })))
+              .then(async (res) => {
+                const { name } = await res.json()
+                dispatch(setAuth({ name }))
+              })
               .catch(console.log)
           }
           value={!isEmpty(name) ? name : 'Not Defined'}
@@ -119,7 +92,9 @@ export default function Profile() {
             <EditableControls />
           </Flex>
         </Editable>
+
         <Divider />
+
         <Editable
           onSubmit={() =>
             putUserField({
@@ -128,7 +103,10 @@ export default function Profile() {
               field: 'surname',
               value: surname,
             })
-              .then((res) => dispatch(setAuth({ surname: res.data as string })))
+              .then(async (res) => {
+                const { surname } = await res.json()
+                dispatch(setAuth({ surname }))
+              })
               .catch(console.log)
           }
           defaultValue={!isEmpty(surname) ? surname : 'Not Defined'}
@@ -149,7 +127,9 @@ export default function Profile() {
             <EditableControls />
           </Flex>
         </Editable>
+
         <Divider />
+
         <Editable
           onSubmit={() =>
             putUserField({
@@ -158,7 +138,10 @@ export default function Profile() {
               field: 'phone',
               value: phone,
             })
-              .then((res) => dispatch(setAuth({ phone: res.data as string })))
+              .then(async (res) => {
+                const { phone } = await res.json()
+                dispatch(setAuth({ phone }))
+              })
               .catch(console.log)
           }
           defaultValue={!isEmpty(phone) ? phone : 'Not Defined'}
@@ -181,5 +164,38 @@ export default function Profile() {
         </Editable>
       </Stack>
     </>
+  )
+}
+
+function EditableControls() {
+  const {
+    isEditing,
+    getSubmitButtonProps,
+    getCancelButtonProps,
+    getEditButtonProps,
+  } = useEditableControls()
+
+  return isEditing ? (
+    <ButtonGroup justifyContent="center" size="sm">
+      <IconButton
+        aria-label="check-icon"
+        icon={<CheckIcon />}
+        {...getSubmitButtonProps()}
+      />
+      <IconButton
+        aria-label="close-icon"
+        icon={<CloseIcon />}
+        {...getCancelButtonProps()}
+      />
+    </ButtonGroup>
+  ) : (
+    <Flex justifyContent="center">
+      <IconButton
+        aria-label="edit-button"
+        size="sm"
+        icon={<EditIcon />}
+        {...getEditButtonProps()}
+      />
+    </Flex>
   )
 }

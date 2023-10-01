@@ -6,18 +6,21 @@ import { AvatarSpinner } from '../ui'
 
 export default function Markets() {
   const dispatch = useDispatch()
-  const { sortBy, desc, perPage, page } = useAppSelector(
-    (state) => state.comp.indicatorSortPorps
-  )
-  const editingTrackedGeckoCoins = useAppSelector(
-    (state) => state.comp.editingTrackedGeckoCoins
-  )
-  const selectedGeckoCoins = useAppSelector(
-    (state) => state.comp.selectedGeckoCoins
-  )
-  const trackedGeckoCoins = useAppSelector(
-    (state) => state.user.trackedGeckoCoins
-  )
+  const {
+    sortBy,
+    desc,
+    perPage,
+    page,
+    editingTrackedGeckoCoins,
+    selectedGeckoCoins,
+    trackedGeckoCoins,
+  } = useAppSelector((state) => ({
+    ...state.comp.indicatorSortPorps,
+    editingTrackedGeckoCoins: state.comp.editingTrackedGeckoCoins,
+    selectedGeckoCoins: state.comp.selectedGeckoCoins,
+    trackedGeckoCoins: state.user.trackedGeckoCoins,
+  }))
+
   const geckoMarkets = useGetGeckoMarketsQuery({
     ids: trackedGeckoCoins,
     perPage,

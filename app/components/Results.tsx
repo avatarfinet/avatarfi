@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Flex, Heading, VStack, Text } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { portStatusCalc } from '../lib/utils/Calculations'
 
 export const Results = ({ isLoading, prices, portfolio }: any) => {

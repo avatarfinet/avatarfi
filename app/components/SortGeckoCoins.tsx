@@ -5,13 +5,16 @@ import { Pagination } from './ui'
 
 export default function SortGeckoCoins() {
   const dispatch = useDispatch()
-  const indicatorSortPorps = useAppSelector(
-    (state) => state.comp.indicatorSortPorps
+
+  const { indicatorSortPorps, trackedGeckoCoinsLength } = useAppSelector(
+    (state) => ({
+      indicatorSortPorps: state.comp.indicatorSortPorps,
+      trackedGeckoCoinsLength: state.user.trackedGeckoCoins?.length,
+    })
   )
-  const trackedGeckoCoinsLength = useAppSelector(
-    (state) => state.user.trackedGeckoCoins?.length
-  )
+
   const { sortBy, perPage, page, desc } = indicatorSortPorps
+
   return (
     <>
       <Wrap align={'center'} justify={'center'} p={3}>

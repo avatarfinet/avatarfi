@@ -1,4 +1,4 @@
-import { setComp, setUser } from '@/lib/store'
+import { setComp, setUser, useAppSelector } from '@/lib/store'
 import { usePatchUserTrackedGeckoCoinsMutation } from '@/lib/store'
 import {
   Button,
@@ -11,23 +11,23 @@ import {
   useColorModeValue,
   Wrap,
 } from '@chakra-ui/react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { AvatarSpinner } from './ui'
 
 export default function EditGeckoTrackedCoins() {
   const dispatch = useDispatch()
-  const { editingTrackedGeckoCoins, selectedGeckoCoins } = useSelector(
-    (state: RootState) => {
-      return {
-        editingTrackedGeckoCoins: state.comp.editingTrackedGeckoCoins,
-        selectedGeckoCoins: state.comp.selectedGeckoCoins,
-      }
-    }
-  )
-  const trackedGeckoCoinsLength = useSelector(
-    (state: RootState) => state.user.trackedGeckoCoins.length
-  )
-  const id = useSelector((state: RootState) => state.auth.id)
+  const {
+    id,
+    editingTrackedGeckoCoins,
+    selectedGeckoCoins,
+    trackedGeckoCoinsLength,
+  } = useAppSelector((state) => ({
+    id: state.auth.id,
+    editingTrackedGeckoCoins: state.comp.editingTrackedGeckoCoins,
+    selectedGeckoCoins: state.comp.selectedGeckoCoins,
+    trackedGeckoCoinsLength: state.user.trackedGeckoCoins.length,
+  }))
+
   const shadowColor = useColorModeValue(
     'rgb(125, 125, 125, 0.2)',
     'rgb(250, 250, 250, 0.1)'

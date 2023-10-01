@@ -7,15 +7,10 @@ import storage from './storage'
 import { mainApi, mainPersistApi } from './apis/main'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
-const persistConfig = {
-  key: 'root',
-  storage,
-}
-
 const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducer),
+  auth: persistReducer({ key: 'auth', storage }, authReducer),
   [mainPersistApi.reducerPath]: persistReducer(
-    persistConfig,
+    { key: mainPersistApi.reducerPath, storage },
     mainPersistApi.reducer
   ),
   // Non Persisted

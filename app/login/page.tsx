@@ -1,8 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useRouter } from 'next/navigation'
+import { useDispatch } from 'react-redux'
 import { useFormik } from 'formik'
 import {
   Button,
@@ -20,9 +18,7 @@ import Link from 'next/link'
 import { AvatarSpinner } from '@/components'
 
 const Login = () => {
-  const router = useRouter()
   const dispatch = useDispatch()
-  const auth = useSelector((state: RootState) => state.auth)
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
@@ -45,13 +41,9 @@ const Login = () => {
     },
   })
 
-  useEffect(() => {
-    if (auth.id) router.push('/')
-  }, [auth.id, router])
-
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Stack spacing={3} align="center">
+      <Stack spacing={4} align="center">
         <FormControl isInvalid={formik.touched.email && !!formik.errors.email}>
           <FormLabel htmlFor="email">E-mail</FormLabel>
           <InputGroup>
@@ -65,6 +57,7 @@ const Login = () => {
           </InputGroup>
           <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
         </FormControl>
+
         <FormControl
           isInvalid={formik.touched.password && !!formik.errors.password}
         >
@@ -80,6 +73,7 @@ const Login = () => {
           </InputGroup>
           <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
         </FormControl>
+
         <ChakraLink as={Link} href="/forgot-pwd" color={'blue.300'}>
           Forgot Password?
         </ChakraLink>
@@ -93,6 +87,10 @@ const Login = () => {
         >
           Login
         </Button>
+
+        <ChakraLink as={Link} href="/signup" color={'blue.300'}>
+          Dont Have an Account? Sign Up
+        </ChakraLink>
       </Stack>
     </form>
   )

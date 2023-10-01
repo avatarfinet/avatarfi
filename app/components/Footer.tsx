@@ -1,7 +1,16 @@
-import { HStack, Image, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+'use client'
+
+import {
+  HStack,
+  Image,
+  Stack,
+  StackProps,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import Link from 'next/link'
 
-export default function Footer() {
+export default function Footer({ ...styles }: StackProps) {
   const bgColor = useColorModeValue(
     'rgb(125, 125, 125, 0.2)',
     'rgb(250, 250, 250, 0.1)'
@@ -15,6 +24,7 @@ export default function Footer() {
       borderColor={'whiteAlpha.400'}
       p={4}
       justify={'center'}
+      {...styles}
     >
       <Stack
         p={3}

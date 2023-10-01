@@ -1,11 +1,8 @@
-'use client'
-
 import { getUserFields } from '@/lib'
-import { setUser } from '@/lib/store'
-import clientAuth from '@/lib/utils/middlewares/clientAuth'
+import { setUser, useAppSelector } from '@/lib/store'
 import { useRouter, usePathname } from 'next/navigation'
 import { createContext, useContext, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 interface AppContextInterface {}
 
@@ -21,7 +18,7 @@ export default function AppProvider({
   const router = useRouter()
   const pathname = usePathname()
   // States
-  const authId = useSelector((state: RootState) => state.auth.id)
+  const authId = useAppSelector((state) => state.auth.id)
 
   // CONTEXT
   //==============================================
@@ -30,19 +27,18 @@ export default function AppProvider({
   //==============================================
   // HANDLE AUTH
   useEffect(() => {
-    if (!authId && !!clientAuth().get('avatarfi_access_token'))
-      clientAuth().remove({ field: 'avatarfi_access_token', path: '/' })
-
-    if (!authId && ['/profile', '/portfolio'].includes(pathname))
-      router.push('/')
+    if (
+      (!authId && ['/profile', '/portfolio'].includes(pathname)) ||
+      (!!authId && ['/login', '/signup'].includes(pathname))
+    )
+      router.replace('/')
 
     if (!!authId)
       getUserFields({ id: authId, fields: ['trackedGeckoCoins'] })
-        .then((res: any) =>
-          dispatch(
-            setUser({ trackedGeckoCoins: res.data?.trackedGeckoCoins ?? [] })
-          )
-        )
+        .then(async (res: any) => {
+          const trackedGeckoCoins = (await res.json())?.trackedGeckoCoins ?? []
+          dispatch(setUser({ trackedGeckoCoins }))
+        })
         .catch((err) => console.log(err))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authId])
