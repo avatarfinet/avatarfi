@@ -1,6 +1,5 @@
 'use client'
 
-import isEmpty from 'is-empty'
 import { resetAuth, resetUser, setAuth } from '@/lib/store'
 import { getSignout, postLogin, postResetPwd, postSignup } from '@/lib'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -26,7 +25,6 @@ export async function handleSignup({
   dispatch: Dispatch
 }) {
   const { name, surname, phone, email, password } = values
-  setSubmitting(true)
   try {
     // HANDLE POST USER
     await postSignup({
@@ -61,7 +59,6 @@ export async function handleLogin({
   setFieldError?: any
   dispatch: Dispatch
 }) {
-  setSubmitting?.(true)
   try {
     const res = await postLogin({ email, password })
     const {
@@ -79,9 +76,8 @@ export async function handleLogin({
         setFieldError?.('email', 'This email is not registered to Avatarfi!')
       if (passwordIsMatch === false)
         setFieldError?.('password', 'Password is incorrect!')
-    } else {
+    } else
       dispatch(setAuth({ id, role, email: userEmail, name, surname, phone }))
-    }
   } finally {
     setSubmitting?.(false)
   }
@@ -99,18 +95,17 @@ export async function handleForgotPwd({
   setFieldError: any
   setHelperText: any
 }) {
-  setSubmitting(true)
   try {
     const res = await postResetPwd({
       email,
       origin: window.origin,
       userAgent: navigator.userAgent,
     })
-    setHelperText(await res.json())
-  } catch (err: any) {
-    const { emailIsRegistered } = err?.response?.data
-    if (!isEmpty(emailIsRegistered) && !emailIsRegistered)
-      setFieldError('email', 'This email is not registered to Avatarfi!')
+    if (!res.ok) {
+      setFieldError('email', await res.text())
+    } else {
+      setHelperText(await res.text())
+    }
   } finally {
     setSubmitting(false)
   }

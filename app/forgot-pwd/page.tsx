@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Button,
   FormControl,
@@ -15,6 +17,7 @@ import { AvatarSpinner } from '@/components'
 
 const ForgotPassword = () => {
   const [helperText, setHelperText] = useState('')
+
   const formik = useFormik({
     initialValues: { email: '' },
     validationSchema: Yup.object({

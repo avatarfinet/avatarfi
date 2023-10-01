@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ENV_FILE="./.env"               # Set the default path to the .env file
+TEMP_ENV_FILE="./temp_env_file" # Temporary environment file
+
 function select_prefix() {
     # Query available options from Docker images
     AVAILABLE_OPTIONS=($(docker images --format "{{.Repository}}" | sort -u))
@@ -22,6 +25,8 @@ function select_prefix() {
     if [ "$OPTION_NUMBER" -eq 0 ]; then
         read -p "Enter the container name prefix: " CUSTOM_PREFIX
         PREFIX="$CUSTOM_PREFIX"
+        read -p "Enter the tag for the image: " TAG
+        PREFIX_TAG="$PREFIX:$TAG"
     else
         PREFIX="${AVAILABLE_OPTIONS[OPTION_NUMBER - 1]}"
         read -p "Enter the tag for the image: " TAG
@@ -30,13 +35,8 @@ function select_prefix() {
 }
 
 function build_image() {
-    export $(cat .env | xargs)
-    docker build \
-        --build-arg ENV=$NEXT_PUBLIC_ENV \
-        --build-arg INFURA_API_KEY=$NEXT_PUBLIC_INFURA_API_KEY \
-        --build-arg GA_ID=$NEXT_PUBLIC_GA_ID \
-        --build-arg WC_ID=$NEXT_PUBLIC_WC_ID \
-        -t $PREFIX_TAG .
+    echo "Building image... $PREFIX_TAG"
+    docker build -t $PREFIX_TAG .
 }
 
 function list_images() {
@@ -48,8 +48,12 @@ function remove_image() {
 }
 
 function start_container() {
+    # Create a temporary environment file based on the original .env
+    cp $ENV_FILE $TEMP_ENV_FILE
+    sed -i 's/^ENV=.*/ENV=production/' $TEMP_ENV_FILE
+
     read -p "Enter the port to run container on: " CUSTOM_PORT
-    docker run -d -p 8080:$CUSTOM_PORT $PREFIX_TAG
+    docker run -d -p 8080:$CUSTOM_PORT --env-file $TEMP_ENV_FILE $PREFIX_TAG
 
     # Clean up temporary environment file
     rm $TEMP_ENV_FILE

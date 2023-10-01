@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
     const user = await User.findOne({ email }, 'email')
 
     if (!user)
-      return NextResponse.json({ emailIsRegistered: false }, { status: 403 })
+      return new Response('This email is not registered to Avatarfi!', {
+        status: 403,
+      })
 
     const token = await new Promise<string>((resolve, reject) => {
       crypto.randomBytes(32, (err, buffer) => {
