@@ -1,62 +1,84 @@
-# Next.js Fullstack For Avatarfi
+# AVTARFI - Next Fullstack
+
+The Next.js Fullstack setup for the AVATARFI platform.
+
+## Summary
+
+This repository hosts the fullstack code for [AVATARFI](https://github.com/avatarfinet). Learn more about AVATARFI at [https://avatarfi.net](https://avatarfi.net).
+
+## Table of Contents
+
+- [Configuration](#configuration)
+- [Quick Start](#quick-start) 
+- [Contribution](#contribution)
 
 ## Configuration
 
-We reccomend using VsCode & you will have to install Eslint extention and set the bellow settings
+**Recommended Editor**: VsCode. For the best experience, install the Eslint and Prettier extensions.
 
-`vscode/settings.json`
+Start by setting up your environment:
 
-```json
-{
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "eslint.format.enable": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  ...
-}
+```bash
+cp .env.example .env
 ```
 
-Make sure to add your own env args from '/.env.local.exemple` -
-to `/.env.local`
+Edit the `/.env` file with the necessary settings:
+
+- `ENV=` (or `development`, `production` according to your needs)
+- `SENDGRID_API_KEY=...`
+- `MONGO_URI=...`
+- `SESSION_SECRET=...`
+
+**GitHub Secrets Configuration**: only for maintainers
+
+For automated processes like CI/CD using GitHub Actions:
+
+1. Navigate to your GitHub repository and access the `Settings` tab.
+2. Locate the `Secrets` option in the left sidebar.
+3. Use the `New repository secret` button to add new secrets.
+4. Specifically, add secrets for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ## Quick Start
 
 ```bash
-# Install dependencies for server
-npm install
+# Install dependencies
+npm i
 
-# Run dev server with
+# Run the development server
 npm run dev
 
-# Run prod server with
-npm run build && npm start
-
+# Run the production server
+npm run build
+npm start
 ```
 
 ## Contribution
 
-Fork the repo to your github page
+If you're looking to contribute, consider forking the repo and making pull requests. Ensure your changes align with project standards and expectations.
+
+---
+
+**Fork the repository**: Click the "Fork" button on the repository page to create a copy of the repository in your own GitHub account.
 
 ```bash
-# Check for linting errors
-npm run lint
+git clone https://github.com/your-username/repository-name.git
 
-# Fix linting errors if there are any
-npm run lint:fix
-
-# Check for typescripy errors
-npm run ts-lint
-
-# Check for formatting errors
-npm run format
-
-# Fix formatting errors if there are any
-npm run format:fix
-
-# Commit to your forked repo
-git add . && git commit -m '...'
-
-# Create a pull request from your github page or
-# terminal to the avatarfi/dev | according branch
+# Create a new branch: Create a new branch for your changes using the git checkout command.
+git checkout -b my-new-branch
 ```
+**Make changes locally**: Make your changes to the codebase. Ensure your changes align with project standards and expectations.
+```bash
+# Run Build ( as clarified above )
+
+# Locally test using Docker
+npm run docker
+```
+**Commit and push**: Commit your changes and push your branch to your fork on GitHub.
+
+```bash
+# Commit and push to your fork
+git add . 
+git commit -m 'chore: exemple commit'
+git push origin my-new-branch
+```
+**Create a pull request**: Go to the original repository page on GitHub and click the "New pull request" button. Select your forked repository and the branch you just pushed to, and click "Create pull request". Add a title and description for your pull request, and click "Create pull request" again to submit it.
