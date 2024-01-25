@@ -110,3 +110,26 @@ export function getSignout() {
     },
   })
 }
+
+export const verifyUser = async (userData: {
+  authToken: string
+  address: string
+  email: string
+}) => {
+  const { authToken, address, email } = userData
+  const res = await fetch('/api/auth/verify', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      address,
+      email,
+    }),
+  })
+
+  const data = await res.json()
+
+  return data
+}
